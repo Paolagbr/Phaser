@@ -1,31 +1,4 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GAME WITH PhaserJS</title>
-</head>
-<body>
-    <h1>Paola Guadalupe Becerra Rodriguez ISC 6°A<h1>
-    
-</body>
-</html> -->
-<!doctype html> 
-<html lang="en"> 
-<head> 
-    <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 10</title>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
-    <style type="text/css">
-        body {
-            margin: 0;
-        }
-    </style>
-</head>
-<body>
-
-<!-- <script type="text/javascript">
-
+// Configuración del juego
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -44,6 +17,10 @@ var config = {
     }
 };
 
+// Inicializa el juego
+var game = new Phaser.Game(config);
+
+// Variables globales
 var player;
 var stars;
 var bombs;
@@ -53,40 +30,33 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 
-var game = new Phaser.Game(config);
-
-function preload ()
-{//Se cargan las imagenes y recursos al juego
+// Función para precargar los recursos
+function preload () {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png',
-         { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
-function create ()
-{
-    
-    this.add.image(400, 300, 'sky');//Se muestra el fondo de pantalla
+// Función para crear los elementos del juego
+function create () {
+    // Fondo
+    this.add.image(400, 300, 'sky');
 
-   //Se agrega estan acomodadas las barras del juego  con la funcion this.physical
+    // Plataformas
     platforms = this.physics.add.staticGroup();
-
-    //Creacion de las plataformas
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
-    //Jugador
+    // Jugador
     player = this.physics.add.sprite(100, 450, 'dude');
-
-    
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
-    //Animaciones con las que trabaja el jugador
+    // Animaciones del jugador
     this.anims.create({
         key: 'left',
         frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -107,10 +77,7 @@ function create ()
         repeat: -1
     });
 
-    //  Input Events
-    cursors = this.input.keyboard.createCursorKeys();
-
-    //Crea las estrellas y se vuelve a llamar la funcion physics para el lugar donde caeran
+    // Estrellas
     stars = this.physics.add.group({
         key: 'star',
         repeat: 11,
@@ -118,100 +85,75 @@ function create ()
     });
 
     stars.children.iterate(function (child) {
-
-       //Estrellas reboten
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
     });
 
+    // Bombas
     bombs = this.physics.add.group();
 
-    //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
- 
-    //Evitar que el jugador salga del limite de las plataformas
+    // Texto de puntuación
+    scoreText = this.add.text(16, 16, 'Puntuación: 0', { fontSize: '32px', fill: '#000' });
+
+    // Colisiones
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
 
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+    // Solapamiento entre el jugador y las estrellas
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    // Controles del cursor
+    cursors = this.input.keyboard.createCursorKeys();
 }
 
-function update ()
-{//Tecla que se mantiene presionada
-    if (gameOver)
-    {
+// Función de actualización
+function update () {
+    if (gameOver) {
         return;
     }
 
-    if (cursors.left.isDown)
-    {
+    if (cursors.left.isDown) {
         player.setVelocityX(-160);
-
         player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
+    } else if (cursors.right.isDown) {
         player.setVelocityX(160);
-
         player.anims.play('right', true);
-    }
-    else
-    {
+    } else {
         player.setVelocityX(0);
-
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down)
-    {
+    if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
     }
 }
 
-function collectStar (player, star)
-{//Funcion que permite que cada el personaje toque la estrella se sume su puntaje
+// Función para recolectar estrellas
+function collectStar (player, star) {
     star.disableBody(true, true);
 
-    //  Add and update the score
     score += 10;
-    scoreText.setText('Score: ' + score);
+    scoreText.setText('Puntuación: ' + score);
 
-    if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
+    if (stars.countActive(true) === 0) {
         stars.children.iterate(function (child) {
-
             child.enableBody(true, child.x, 0, true, true);
-
         });
 
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
         var bomb = bombs.create(x, 16, 'bomb');
         bomb.setBounce(1);
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
-
     }
 }
 
-function hitBomb (player, bomb)
-{
+// Función para manejar la colisión con bombas
+function hitBomb (player, bomb) {
     this.physics.pause();
-
     player.setTint(0xff0000);
-
     player.anims.play('turn');
-
     gameOver = true;
 }
-
-</script> -->
-    <script src="script.js"></script>
-</body>
-</html>
