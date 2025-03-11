@@ -1,8 +1,8 @@
 // Configuración del juego
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
     physics: {
         default: 'arcade',
         arcade: {
@@ -32,25 +32,35 @@ var scoreText;
 
 // Función para precargar los recursos
 function preload () {
-    this.load.image('sky', 'assets/sky.png');
-    this.load.image('ground', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
+    this.load.image('sky', 'assets/Fondo.webp');
+    this.load.image('ground', 'assets/tronco.png');
+    this.load.image('star', 'assets/bill.png');
     this.load.image('bomb', 'assets/bomb.png');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('vida', 'assets/vida.png');
+    this.load.spritesheet('dude', 'assets/dude.png',
+        { frameWidth: 32, frameHeight: 48 });
 }
 
 // Función para crear los elementos del juego
 function create () {
     // Fondo
-    this.add.image(400, 300, 'sky');
+    var sky = this.add.image(0, 0, 'sky').setOrigin(0, 0);
+    sky.setScale(2);//Se muestra el fondo de pantalla
+
 
     // Plataformas
     platforms = this.physics.add.staticGroup();
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-    platforms.create(600, 400, 'ground');
-    platforms.create(50, 250, 'ground');
-    platforms.create(750, 220, 'ground');
-
+    //Creacion de las plataformas
+    platforms.create(240, 1000, 'ground').setScale(2).refreshBody();
+    platforms.create(800, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();;
+    platforms.create(1400, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();;
+    platforms.create(2000, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();;
+    platforms.create(100, 400, 'ground');
+    platforms.create(600, 700, 'ground');
+    platforms.create(1000, 300, 'ground').setScale(1.5).refreshBody();
+    platforms.create(1500, 480, 'ground');
+    platforms.create(1750, 700, 'ground');
+    
     // Jugador
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.2);
