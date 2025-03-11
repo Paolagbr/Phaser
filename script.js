@@ -23,6 +23,7 @@ var game = new Phaser.Game(config);
 // Variables globales
 var player;
 var stars;
+var vidas=3;
 var bombs;
 var platforms;
 var cursors;
@@ -93,7 +94,7 @@ this.anims.create({
 // Estrellas
 stars = this.physics.add.group({
     key: 'star',
-    repeat: 20,
+    repeat: 1,
     setXY: { x: 60, y: 0, stepX: 90 }
 });
 
@@ -165,10 +166,16 @@ function collectStar (player, star) {
     }
 }
 
-// Función para manejar la colisión con bombas
+// Función para manejar la colisión con bombas y vidas
 function hitBomb (player, bomb) {
-    this.physics.pause();
-    player.setTint(0xff0000);
-    player.anims.play('turn');
-    gameOver = true;
+    if(vidas<=3){
+        vidas--;
+        player.setTint(0xff0000);
+
+    }else if(vidas===0){
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+        gameOver = true;
+    }
 }
