@@ -1,0 +1,62 @@
+/* Asegurar que no haya márgenes ni espacios extras */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Contenedor que ocupa toda la pantalla */
+.contenedor {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Imagen de fondo ajustada a la pantalla */
+.fondo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* La imagen se ajusta sin distorsionarse */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Texto centrado sobre la imagen */
+.texto-superpuesto {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #bb9807;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.25); /* Fondo oscuro semitransparente */
+    padding: 20px;
+    border-radius: 10px;
+    font-style: italic;
+}
+
+#cajasoltar{ float: left;
+    width: 500px; height:
+    500px; margin: 10px;
+    border: 1px solid #999999;
+}
+#cajaimagenes{
+     float: left;
+    width: 500px;
+    height: 500px;
+    margin: 10px;
+     border: 1px solid #999999;
+}
+#cajaimagenes > img{
+    float: right;
+     padding: 5px;
+} 
+
+/* #lienzo{
+    background-image: url(../Bosque.png);
+    background-size: cover;
+} */
