@@ -1,0 +1,73 @@
+@font-face {
+
+    font-family: 'Titulo';
+    src: url("../PortadaInicio/Tequilla Sunrise.ttf");
+
+}
+
+body {
+    padding: 0px;
+    background-image: url("/img/fondos.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   
+    
+}
+/*Logo*/
+img{
+  max-width: 6000px;
+  max-height: 450px;
+  margin-left: 10%;
+}
+/*Botones*/
+.body{
+  display: flex;
+ justify-content: left;
+  align-items: center;
+  margin-left: 200px;
+  display: block;
+  
+
+}
+.boton-container {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 45px; 
+  max-width: 25%;
+  
+}
+
+.boton {
+  max-height: 120px;
+  padding: 0px;
+  font-size: 30px;
+  text-align: center;
+  background-color: transparent;
+  color: white;
+  border: none;
+  
+  border-radius: 5px;
+  transition: 0.3s;
+  background-image: url('/img/boton3.png'); 
+  background-position: center ;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-left:0px; 
+ font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+ box-shadow: 5px 5px 5px rgba(218, 211, 81, 0.879); 
+}
+
+.boton:hover {
+  background-color: transparent;
+  color: rgb(214, 219, 56);
+  font-size: 35px;
+  
+}
+.boton:focus {
+  outline: none; 
+}
+
+#audioFondo {
+  display: none;
+}
+
