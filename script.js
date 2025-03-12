@@ -30,6 +30,8 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var vidas = 3;
+var vidasI = [];//Almacena las imagenes de las vidas
 
 // Función para precargar los recursos
 function preload () {
@@ -120,6 +122,13 @@ stars.children.iterate(function (child) {
 
     // Controles del cursor
     cursors = this.input.keyboard.createCursorKeys();
+
+    //Se muestran las vidas del jugador
+    
+    for (var i = 0; i < vidas; i++) {
+        var vidaImagen = this.add.image(20 + (i * 30), 100, 'vida').setScale(0.8);
+        vidasI.push(vidaImagen);
+    }
 }
 
 // Función de actualización
@@ -168,7 +177,15 @@ function collectStar (player, star) {
 
 // Función para manejar la colisión con bombas y vidas
 function hitBomb (player, bomb) {
-    if(vidas<=3){
+    var playerX = player.x;//El jugador se mantega en su posicion 
+    var playerY = player.y;
+
+    player.setTint(0xff0000);
+    player.anims.play('turn');
+    perderVida.call(this, playerX, playerY);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), Phaser.Math.Between(-200, 200));
+
+   /* if(vidas<=3){
         vidas--;
         player.setTint(0xff0000);
 
@@ -177,5 +194,27 @@ function hitBomb (player, bomb) {
         player.setTint(0xff0000);
         player.anims.play('turn');
         gameOver = true;
+    }*/
+}
+function perderVida(playerX, playerY) {
+    vidas--;
+    if (vidas >= 0) {
+        this.time.delayedCall(500, () => {
+            player.clearTint();
+            player.setPosition(playerX, playerY);
+            player.setVelocity(0, 0);
+            this.physics.resume();
+
+            if (vidasI.length > 0) {
+                let vidaPerdida = vidasI.pop();
+                vidaPerdida.destroy();
+            }
+        });
+    }
+
+    if (vidas < 1) {
+        gameOver = true;
+        player.anims.play('turn');
+        this.physics.pause();
     }
 }
