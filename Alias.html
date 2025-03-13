@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alias con Teclado Virtual</title>
+    <style>
+        @font-face {
+
+            font-family: 'Titulo';
+            src: url("/spacetime-regular.ttf");
+
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            max-height: 100vh;
+            background-image: url("/img/FondoValidacion1.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #aliasDisplay {
+            font-size: 28px;
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            margin: 5px;
+            padding: 10px;
+            border: 2px solid #000;
+            display: inline-block;
+            font-weight: 10px;
+            min-width: 450px;
+            min-height: 40px;
+        }
+
+        #teclado {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            max-width: 1000px;
+            margin: 20px auto;
+            margin-top: 20px;
+        }
+
+        .tecla {
+            font-size: 25px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            background: #a9a6a6;
+            flex: 2 1 10%;
+            text-align: center;
+            border-radius: 5px;
+            border: 2px solid #000;
+        }
+
+        .tecla:hover {
+            background: rgb(213, 175, 79);
+        }
+
+        #guardar {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background: rgb(80, 201, 80);
+            color: white;
+            border: none;
+            border-radius: 2px ;
+        }
+        h2{
+            font-family: 'Titulo';
+            font-size: 3.6rem;
+        }
+
+
+        #borrar {
+            background: red;
+            color: white;
+        }
+        #continuar{
+            margin-left: 80%;
+            background: #dbcc4e;
+            font-size: 1.5rem;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Ingresa tu Alias</h2>
+    <div id="aliasDisplay"></div>
+    <div id="teclado"></div>
+    <br>
+    <button id="guardar">Guardar Alias</button>
+    <button id="continuar" onclick="location.href='personajes.html'">Continuar</button>
+
+    <p id="mensaje"></p>
+
+    <script>
+        const teclas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'.split('');
+        const tecladoDiv = document.getElementById('teclado');
+        const aliasDisplay = document.getElementById('aliasDisplay');
+        let alias = '';
+
+        // Crear teclas
+        teclas.forEach(tecla => {//Ciclo que genera un boton acorde a las letras
+
+            let boton = document.createElement('button');
+            boton.textContent = tecla;
+            boton.classList.add('tecla');
+            boton.onclick = function () {
+                if (alias.length < 8) {
+                    alias += tecla;
+                    aliasDisplay.textContent = alias;
+                }
+            };
+            tecladoDiv.appendChild(boton);
+        });
+
+        // Tecla de borrar
+        let borrarBoton = document.createElement('button');
+        borrarBoton.textContent = 'Borrar';
+        borrarBoton.classList.add('tecla');
+        borrarBoton.id = 'borrar';
+        borrarBoton.onclick = function () {
+            alias = alias.slice(0, -1); // Eliminar el último carácter
+            aliasDisplay.textContent = alias;
+        };
+        tecladoDiv.appendChild(borrarBoton);
+
+        // Guardar alias
+        document.getElementById('guardar').onclick = function () {
+            if (alias.length >= 4 && alias.length <= 8) {
+                if (!localStorage.getItem(alias)) {
+                    localStorage.setItem(alias, 'jugador');
+                    document.getElementById('mensaje').textContent = 'Alias guardado con éxito';
+                } else {
+                    document.getElementById('mensaje').textContent = 'El alias ya existe';
+                }
+            } else {
+                document.getElementById('mensaje').textContent = 'El alias debe tener entre 4 y 8 caracteres';
+            }
+        };
+    </script>
+</body>
+
+</html>
