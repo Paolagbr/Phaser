@@ -10,17 +10,22 @@
     position: relative;
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Imagen de fondo ajustada a la pantalla */
 .fondo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* La imagen se ajusta sin distorsionarse */
-    position: absolute;
+    position: fixed; /*Manda al fondo la imagen*/
+    /* position: relative; */
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover; /* Se ajusta sin deformarse */
+    z-index: -1; /* Se envía al fondo */
 }
 
 /* Texto centrado sobre la imagen */
@@ -39,22 +44,36 @@
     font-style: italic;
 }
 
-#cajasoltar{ float: left;
-    width: 500px; height:
-    500px; margin: 10px;
+#cajasoltar{ 
+    float: left;
+    width: 500px; 
+    height:500px; 
+    margin: 10px;
     border: 1px solid #999999;
+    margin-top: 500px;
 }
 #cajaimagenes{
      float: left;
     width: 500px;
     height: 500px;
     margin: 10px;
-     border: 1px solid #999999;
+    border: 1px solid #999999;
 }
 #cajaimagenes > img{
     float: right;
      padding: 5px;
+     margin-top: -500px;
 } 
+
+.mab{
+    position: relative;
+    margin-top: -750px;  /* Cambiado para que se vea bien */
+    margin-left: 50px;
+    height: auto;
+    width: 300px;
+    border: 5px solid white;
+    z-index: 1; /* Asegura que esté sobre el fondo */
+}
 
 /* #lienzo{
     background-image: url(../Bosque.png);
