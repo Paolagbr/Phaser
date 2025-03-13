@@ -67,15 +67,63 @@
 
 .mab{
     position: relative;
-    margin-top: -750px;  /* Cambiado para que se vea bien */
-    margin-left: 50px;
+    top: -600px;  /* Cambiado para que se vea bien */
+    left: 70px;
     height: auto;
-    width: 300px;
+    width: 250px;
+    margin: 10px;
     border: 5px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 1; /* Asegura que esté sobre el fondo */
 }
 
-/* #lienzo{
-    background-image: url(../Bosque.png);
-    background-size: cover;
-} */
+.dip{
+    position: relative;
+    top: -920px;  /* Cambiado para que se vea bien */
+    left: 1100px;
+    height: auto;
+    width: 200px;
+    margin: 10px;
+    border: 5px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Asegura que esté sobre el fondo */
+}
+
+/* Contenedores de imágenes */
+.contenedor-imagen {
+    display: inline-block;
+    margin: 20px;
+    padding: 10px;
+    border: 2px solid transparent;
+    top: -500px;
+}
+
+/* Imagenes arrastrables */
+.mab, .dip {
+    cursor: grab;
+}
+
+/* Zona de soltado */
+.zona-soltar {
+    width: 350px;
+    height: 200px;
+    border: 2px dashed #000;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 470px;
+    left: 600px;
+}
+
+/* Efecto cuando la imagen está sobre la zona de soltar */
+.zona-soltar.over {
+    background-color: rgba(0, 255, 0, 0.3);
+    border: 2px dashed green;
+}

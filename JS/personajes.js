@@ -1,45 +1,60 @@
-function iniciar() {
-    var imagenes = document.querySelectorAll('#cajaimagenes > img');
-    for (var i = 0; i < imagenes.length; i++) {
-        imagenes[i].addEventListener('dragstart', arrastrado, false);
-        imagenes[i].addEventListener('dragend', finalizado, false);
+document.addEventListener("DOMContentLoaded", () => {
+    const img1 = document.getElementById("drag1");
+    const img2 = document.getElementById("drag2");
+    const dropZone = document.getElementById("div3");
+    const statusText = document.querySelector(".texto-superpuesto");
+
+    function allowDrop(event) {
+        event.preventDefault();
     }
 
-    soltar = document.getElementById('lienzo');
-    lienzo = soltar.getContext('2d');
-    soltar.addEventListener('dragenter', eventoEnter, false);
-    soltar.addEventListener('dragover', eventoOver, false);
-    soltar.addEventListener('drop', soltado, false);
-}
+    function drag(event) {
+        event.dataTransfer.setData("text", event.target.id);
+        statusText.textContent = "Arrastrando la imagen...";
+    }
 
-function eventoEnter(e) {
-    console.log("soy el evento dragenter");
-    e.preventDefault();
-}
+    function drop(event) {
+        event.preventDefault();
+        
+        const data = event.dataTransfer.getData("text");
+        const img = document.getElementById(data);
+        
+        // Verifica si el elemento donde se suelta es la zona de soltar
+        if (event.target.id === "div3") {
+            event.target.appendChild(img);
+            statusText.textContent = "Imagen soltada en el cuadro punteado.";
+        }
+    }
 
-function eventoOver(e) {
-    console.log("soy el evento dragover");
-    e.preventDefault();
-}
+    function dragEnter(event) {
+        event.preventDefault();
+        if (event.target.id === "div3") {
+            event.target.classList.add("over");
+            statusText.textContent = "Imagen dentro del área de soltar.";
+        }
+    }
 
-function finalizado(e) {
-    elemento = e.target;
-    elemento.style.visibility = 'hidden';
-}
+    function dragLeave(event) {
+        if (event.target.id === "div3") {
+            event.target.classList.remove("over");
+            statusText.textContent = "Imagen fuera del área de soltar.";
+        }
+    }
 
-function arrastrado(e) {
-    elemento = e.target;
-    e.dataTransfer.setData('Text', elemento.getAttribute('id'));
-    e.dataTransfer.setDragImage(e.target, 0, 0);
-}
+    function dragEnd(event) {
+        statusText.textContent = "Dejó de arrastrar la imagen.";
+    }
 
-function soltado(e) {
-    e.preventDefault();
-    var id = e.dataTransfer.getData('Text');
-    var elemento = document.getElementById(id);
-    var posx = e.pageX - soltar.offsetLeft; // coordenada x para el soltado
-    var posy = e.pageY - soltar.offsetTop;  // coordenada y para el soltado
-    lienzo.drawImage(elemento, posx, posy);
-}
+    // Asignar eventos a la zona de soltar
+    dropZone.addEventListener("dragover", allowDrop);
+    dropZone.addEventListener("drop", drop);
+    dropZone.addEventListener("dragenter", dragEnter);
+    dropZone.addEventListener("dragleave", dragLeave);
 
-window.addEventListener('load', iniciar, false);
+    // Asignar eventos a las imágenes
+    img1.addEventListener("dragstart", drag);
+    img1.addEventListener("dragend", dragEnd);
+    
+    img2.addEventListener("dragstart", drag);
+    img2.addEventListener("dragend", dragEnd);
+});
