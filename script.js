@@ -1,3 +1,6 @@
+// Recuperar el personaje seleccionado desde localStorage
+var personajeSeleccionado = localStorage.getItem("personajeSeleccionado") || "drag1"; 
+
 // Configuración del juego
 var config = {
     type: Phaser.AUTO,
@@ -40,7 +43,17 @@ function preload () {
     this.load.image('star', 'assets/bill.png');
     this.load.image('bomb', 'assets/Hectorgon.png');
     this.load.image('vida', 'assets/vida.png');
-    this.load.spritesheet('dude', 'assets/Mabelonga.png', { frameWidth: 66, frameHeight: 80 });
+    /*this.load.spritesheet('dude', 'assets/Mabelonga.png', { frameWidth: 66, frameHeight: 80 });*/
+
+    //Cargar el sprite del personaje seleccionado
+    if (personajeSeleccionado === "drag1") {
+        this.load.spritesheet('dude', 'assets/Mabelonga.png', { frameWidth: 66, frameHeight: 80 });
+    } else if (personajeSeleccionado === "drag2") {
+        this.load.spritesheet('dude', 'assets/Dipper.png', { frameWidth: 43, frameHeight: 80 });
+    }
+
+console.log("Perosnaje cargado en el juego: ",personajeSeleccionado)
+
 }
 
 // Función para crear los elementos del juego
@@ -67,43 +80,28 @@ function create () {
     platforms.create(1750, 700, 'ground').setScale(0.5).setFlipX(true).refreshBody();
     platforms.create(1500, 750, 'ground').setScale(0.75).setFlipX(true).refreshBody();
     
-    // Jugador
-player = this.physics.add.sprite(100, 750, 'dude');
-player.setBounce(0.2);
-player.setCollideWorldBounds(true);
+        // Jugador
+    player = this.physics.add.sprite(100, 750, 'dude');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
 
-// Animaciones del jugador
-this.anims.create({
-    key: 'left',
-    frames: this.anims.generateFrameNumbers('dude', { start: 2, end: 7 }),
-    frameRate: 10,
-    repeat: -1
-});
+    configurarAnimaciones(this, personajeSeleccionado);
 
-this.anims.create({
-    key: 'turn',
-    frames: [{ key: 'dude', frame: 8 }],
-    frameRate: 20
-});
+    // Animaciones del jugador
+    //Estrellas
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 1,
+        setXY: { x: 60, y: 0, stepX: 90 }
+    });
 
-this.anims.create({
-    key: 'right',
-    frames: this.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
-    frameRate: 10,
-    repeat: -1
-});
+    stars.children.iterate(function (child) {
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
 
-// Estrellas
-stars = this.physics.add.group({
-    key: 'star',
-    repeat: 1,
-    setXY: { x: 60, y: 0, stepX: 90 }
-});
-
-stars.children.iterate(function (child) {
-    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-});
-
+    stars.children.iterate(function(child){
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
 
     // Bombas
     bombs = this.physics.add.group();
@@ -129,13 +127,59 @@ stars.children.iterate(function (child) {
         var vidaImagen = this.add.image(20 + (i * 30), 100, 'vida').setScale(0.8);
         vidasI.push(vidaImagen);
     }
+
+    configurarAnimaciones(this, personajeSeleccionado)
+        cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    //Configurar animaciones según el personaje
+    function configurarAnimaciones(scene, personaje){
+        if(personaje === "drag1"){
+            scene.anims.create({
+                key: 'left',
+                frames: scene.anims.generateFrameNumbers('dude', {start: 2, end: 7}),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            scene.anims.create({
+                key: 'turn',
+                frames:[{key: 'dude', frame: 8}],
+                frameRate: 20,
+            });
+
+            scene.anims.create({
+                key: 'right',
+                frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
+                frameRate: 10,
+                repeat: -1
+            });
+        } else if(personaje === "drag2") {
+            scene.anims.create({
+                key: 'left',
+                frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            scene.anims.create({
+                key: 'turn',
+                frames: [{ key: 'dude', frame: 8 }],
+                frameRate: 20
+            });
+
+            scene.anims.create({
+                key: 'right',
+                frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
+                frameRate: 10,
+                repeat: -1
+            });
+    }
 }
 
 // Función de actualización
 function update () {
-    if (gameOver) {
-        return;
-    }
+    if (gameOver) return;
 
     if (cursors.left.isDown) {
         player.setVelocityX(-160);

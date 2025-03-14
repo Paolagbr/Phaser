@@ -1,129 +1,122 @@
-/* Asegurar que no haya márgenes ni espacios extras */
+/* Estilos generales */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Contenedor que ocupa toda la pantalla */
-.contenedor {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    /* overflow: hidden; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
 
-/* Imagen de fondo ajustada a la pantalla */
+/* Imagen de fondo */
 .fondo {
-    position: fixed; /*Manda al fondo la imagen*/
-    /* position: relative; */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    object-fit: cover; /* Se ajusta sin deformarse */
-    z-index: -1; /* Se envía al fondo */
+    object-fit: cover;
+    z-index: -1;
 }
 
-/* Texto centrado sobre la imagen */
+/* Título */
 .texto-superpuesto {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #bb9807;
-    font-size: 30px;
-    font-weight: bold;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.25); /* Fondo oscuro semitransparente */
-    padding: 20px;
-    border-radius: 10px;
-    font-style: italic;
-}
-
-#cajasoltar{ 
-    float: left;
-    width: 500px; 
-    height:500px; 
-    margin: 10px;
-    border: 1px solid #999999;
-    margin-top: 500px;
-}
-#cajaimagenes{
-     float: left;
-    width: 500px;
-    height: 500px;
-    margin: 10px;
-    border: 1px solid #999999;
-}
-#cajaimagenes > img{
-    float: right;
-     padding: 5px;
-     margin-top: -500px;
-} 
-
-.mab{
     position: relative;
-    top: -600px;  /* Cambiado para que se vea bien */
-    left: 70px;
-    height: auto;
-    width: 250px;
-    margin: 10px;
-    border: 5px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; /* Asegura que esté sobre el fondo */
+    font-size: 24px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    display: inline-block;
+    border-radius: 5px;
 }
 
-.dip{
-    position: relative;
-    top: -920px;  /* Cambiado para que se vea bien */
-    left: 1100px;
-    height: auto;
-    width: 200px;
-    margin: 10px;
-    border: 5px solid white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; /* Asegura que esté sobre el fondo */
-}
-
-/* Contenedores de imágenes */
+/* Contenedor de imágenes */
 .contenedor-imagen {
     display: inline-block;
     margin: 20px;
     padding: 10px;
-    border: 2px solid transparent;
-    top: -500px;
 }
 
 /* Imagenes arrastrables */
-.mab, .dip {
+.mab, .dip{
     cursor: grab;
+}
+
+.mab{
+    width: 200px;
+    height: 150px;
+}
+
+.dip{
+    width: 200px;
+    height: 150px;
 }
 
 /* Zona de soltado */
 .zona-soltar {
-    width: 350px;
-    height: 200px;
+    width: 200px;
+    height: 150px;
     border: 2px dashed #000;
     margin: 20px auto;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.3);
-    position: absolute;
-    top: 470px;
-    left: 600px;
 }
 
-/* Efecto cuando la imagen está sobre la zona de soltar */
+/* Cambia color cuando la imagen está sobre el área */
 .zona-soltar.over {
     background-color: rgba(0, 255, 0, 0.3);
     border: 2px dashed green;
 }
+
+
+/*Parte de los botones*/
+.body{
+    display: flex;
+   justify-content: left;
+    align-items: center;
+    margin-left: 200px;
+    display: block;
+    
+  
+  }
+  .boton-container {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    gap: 45px; 
+    max-width: 25%;
+    
+  }
+  
+  .boton {
+    max-height: 120px;
+    padding: 0px;
+    font-size: 30px;
+    text-align: center;
+    background-color: transparent;
+    color: white;
+    border: none;
+    
+    border-radius: 5px;
+    transition: 0.3s;
+    background-image: url('/img/boton3.png'); 
+    background-position: center ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-left:0px; 
+   font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+   box-shadow: 5px 5px 5px rgba(218, 211, 81, 0.879); 
+  }
+  
+  .boton:hover {
+    background-color: transparent;
+    color: rgb(214, 219, 56);
+    font-size: 35px;
+    
+  }
+  .boton:focus {
+    outline: none; 
+  }

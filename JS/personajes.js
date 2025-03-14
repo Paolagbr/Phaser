@@ -1,8 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const img1 = document.getElementById("drag1");
-    const img2 = document.getElementById("drag2");
-    const dropZone = document.getElementById("div3");
-    const statusText = document.querySelector(".texto-superpuesto");
+    const imagenes = document.querySelectorAll(".contenedor-imagen img"); // Todas las imágenes
+    const zonaSoltar = document.getElementById("divDestino");
+    const statusText = document.getElementById("status");
+
+    // Agregar eventos a todas las imágenes
+    imagenes.forEach(img => {
+        img.addEventListener("dragstart", drag);
+        img.addEventListener("dragend", dragEnd);
+    });
+
+    // Eventos para la zona de soltar
+    zonaSoltar.addEventListener("dragover", allowDrop);
+    zonaSoltar.addEventListener("drop", drop);
+    zonaSoltar.addEventListener("dragenter", dragEnter);
+    zonaSoltar.addEventListener("dragleave", dragLeave);
 
     function allowDrop(event) {
         event.preventDefault();
@@ -15,46 +26,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function drop(event) {
         event.preventDefault();
-        
+
         const data = event.dataTransfer.getData("text");
         const img = document.getElementById(data);
-        
-        // Verifica si el elemento donde se suelta es la zona de soltar
-        if (event.target.id === "div3") {
-            event.target.appendChild(img);
-            statusText.textContent = "Imagen soltada en el cuadro punteado.";
+
+        // Mover imagen a la zona de soltar
+        zonaSoltar.innerHTML = ""; // Limpiar el cuadro antes de agregar la nueva imagen
+        zonaSoltar.appendChild(img);
+
+        //Corregir el id del localStorage
+        let personaje;
+        if (data === "drag1"){
+            personaje="MabelSF";
+        }else if(data === "drag2") {
+            personaje = "DipperSF";
+
         }
+
+        // Guardar en localStorage
+        localStorage.setItem("personajeSeleccionado", data);
+
+        statusText.textContent = `Has seleccionado el personaje con ID: ${data}`;
     }
 
     function dragEnter(event) {
         event.preventDefault();
-        if (event.target.id === "div3") {
-            event.target.classList.add("over");
-            statusText.textContent = "Imagen dentro del área de soltar.";
-        }
+        zonaSoltar.classList.add("over");
     }
 
     function dragLeave(event) {
-        if (event.target.id === "div3") {
-            event.target.classList.remove("over");
-            statusText.textContent = "Imagen fuera del área de soltar.";
-        }
+        zonaSoltar.classList.remove("over");
     }
 
     function dragEnd(event) {
         statusText.textContent = "Dejó de arrastrar la imagen.";
     }
-
-    // Asignar eventos a la zona de soltar
-    dropZone.addEventListener("dragover", allowDrop);
-    dropZone.addEventListener("drop", drop);
-    dropZone.addEventListener("dragenter", dragEnter);
-    dropZone.addEventListener("dragleave", dragLeave);
-
-    // Asignar eventos a las imágenes
-    img1.addEventListener("dragstart", drag);
-    img1.addEventListener("dragend", dragEnd);
-    
-    img2.addEventListener("dragstart", drag);
-    img2.addEventListener("dragend", dragEnd);
 });
+
+const personajeSeleccionado = localStorage.getItem("personajeSeleccionado");
+
+if (personajeSeleccionado) {
+    console.log("Personaje seleccionado:", personajeSeleccionado);
+    document.body.innerHTML += `<img src="/img/${personajeSeleccionado}.png" width="150">`;
+} else {
+    console.log("No se ha seleccionado ningún personaje.");
+}

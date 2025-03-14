@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +12,25 @@
         <h1 class="texto-superpuesto">Arrastra tu personaje al cuadro punteado</h1>
     </div>
 
-    <!-- Parte de imagenes -->
-    <div id="div1">
+    <!-- Imágenes disponibles -->
+    <div id="div1" class="contenedor-imagen">
         <img src="/img/MabelSF.png" draggable="true" id="drag1" width="150" height="100" class="mab">
     </div>
 
-    <div id="div2">
+    <div id="div2" class="contenedor-imagen">
         <img src="/img/DipperSF.png" draggable="true" id="drag2" width="150" height="100" class="dip">
     </div>
 
-    <!-- Cuadro donde debe llegar -->
-    <div id="div3" class="zona-soltar"></div>
+    <!-- Cuadro donde deben soltar la imagen -->
+    <div id="divDestino" class="zona-soltar">
+        <p>Arrastra aquí</p>
+    </div>
 
-    
+    <p id="status"></p> <!-- Mensaje de estado -->
+
+    <button class="boton" onclick="location.href='juego1.html'" >JUGAR</button>
+
     <script src="/JS/personajes.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
