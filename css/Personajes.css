@@ -1,4 +1,9 @@
 /* Estilos generales */
+:root{
+   --ColorPrincipal:#fff;
+
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -24,12 +29,14 @@ body {
 /* Título */
 .texto-superpuesto {
     position: relative;
-    font-size: 24px;
-    color: #fff;
+    font-size: 2rem;
+    color: var(--ColorPrincipal);
     background: rgba(0, 0, 0, 0.5);
     padding: 10px;
     display: inline-block;
     border-radius: 5px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    color: var(--ColorPrincipal);
 }
 
 /* Contenedor de imágenes */
@@ -97,7 +104,7 @@ body {
     font-size: 30px;
     text-align: center;
     background-color: transparent;
-    color: white;
+    color: var(--ColorPrincipal);
     border: none;
     
     border-radius: 5px;
