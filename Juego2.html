@@ -33,9 +33,10 @@
                 default: 'arcade',
                 arcade: {
                     gravity: { y: 350 },
-                    debug: true  //hay que cambiarle a false
+                    debug: false  //hay que cambiarle a false
                 }
             },
+    
             scene: {
                 preload: preload,
                 create: create,
@@ -96,6 +97,7 @@
 
         var maxPlatforms = staticPlatforms.length;
         var game = new Phaser.Game(config);
+    //    this.physics.world.createDebugGraphic();
 
         function preload() {//Precargar las imagenes y recursos a usar
             this.load.image('sky', 'assets/Nivel2.png');
@@ -156,78 +158,81 @@
             }, this);
 
             //Jugador
-            /*player = this.physics.add.sprite(100, 450, 'dude');
+            player = this.physics.add.sprite(100, 450, 'dude');
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
             player.setVelocityY(0);
 
-            //Animaciones del personaje
-            this.anims.create({
-                key: 'left',
-                frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-                frameRate: 10,
-                repeat: -1
-            })
-
-            this.anims.create({
-                key: 'turn',
-                frames: [{ key: 'dude', frame: 4 }],
-                frameRate: 20
-            });
-
-            this.anims.create({
-                key: 'right',
-                frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-                frameRate: 10,
-                repeat: -1
-            });*/
-
-            function configurarAnimaciones(scene, personaje) {
-    if (personaje === "drag1") {
-        scene.anims.create({
-            key: 'left',
-            frames: scene.anims.generateFrameNumbers('dude', { start: 2, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        scene.anims.create({
-            key: 'turn',
-            frames: [{ key: 'dude', frame: 8 }],
-            frameRate: 20,
-        });
-
-        scene.anims.create({
-            key: 'right',
-            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
-            frameRate: 10,
-            repeat: -1
-        });
-    } else if (personaje === "drag2") {
-        scene.anims.create({
-            key: 'left',
-            frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        scene.anims.create({
-            key: 'turn',
-            frames: [{ key: 'dude', frame: 8 }],
-            frameRate: 20
-        });
-
-        scene.anims.create({
-            key: 'right',
-            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
-            frameRate: 10,
-            repeat: -1
-        });
-    }
-}
+            /*  //Animaciones del personaje
+              this.anims.create({
+                  key: 'left',
+                  frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+                  frameRate: 10,
+                  repeat: -1
+              })
+  
+              this.anims.create({
+                  key: 'turn',
+                  frames: [{ key: 'dude', frame: 4 }],
+                  frameRate: 20
+              });
+  
+              this.anims.create({
+                  key: 'right',
+                  frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+                  frameRate: 10,
+                  repeat: -1
+              });*/
+            configurarAnimaciones(this, personajeSeleccionado);
 
             cursors = this.input.keyboard.createCursorKeys();
             bombs = this.physics.add.group();
+            function configurarAnimaciones(scene, personaje) {
+                if (personaje === "drag1") {
+                    scene.anims.create({
+                        key: 'left',
+                        frames: scene.anims.generateFrameNumbers('dude', { start: 2, end: 7 }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+
+                    scene.anims.create({
+                        key: 'turn',
+                        frames: [{ key: 'dude', frame: 8 }],
+                        frameRate: 20,
+                    });
+
+                    scene.anims.create({
+                        key: 'right',
+                        frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+                } else if (personaje === "drag2") {
+                    scene.anims.create({
+                        key: 'left',
+                        frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+
+                    scene.anims.create({
+                        key: 'turn',
+                        frames: [{ key: 'dude', frame: 8 }],
+                        frameRate: 20
+                    });
+
+                    scene.anims.create({
+                        key: 'right',
+                        frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
+                        frameRate: 10,
+                        repeat: -1
+                    });
+                }
+            }
+
+            //    cursors = this.input.keyboard.createCursorKeys();
+            //  bombs = this.physics.add.group();
 
             //Mensajes  pantalla como lo es tiempo y el puntaje
             // Datos a pantalla
@@ -329,11 +334,11 @@
             if (cursors.left.isDown) {
                 player.setVelocityX(-250);
                 player.anims.play('left', true);
-                player.setFlipX(true); 
+                //player.setFlipX(true); 
             } else if (cursors.right.isDown) {
                 player.setVelocityX(250);
                 player.anims.play('right', true);
-                player.setFlipX(false); //Cambiar a true o false
+                //player.setFlipX(false); //Cambiar a true o false
             } else {
                 player.setVelocityX(0);
                 player.anims.play('turn');
@@ -409,18 +414,18 @@
         }
 
         if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
-            child.enableBody(true, child.x, 0, true, true);
-        });
+            stars.children.iterate(function (child) {
+                child.enableBody(true, child.x, 0, true, true);
+            });
 
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setScale(0.05);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
-    }
+            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setScale(0.05);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.allowGravity = false;
+        }
 
         function collectSpecialItem(player, specialItem) {
             specialItem.destroy(); // Destruye el libro despues de que lo toca el personaje
@@ -472,7 +477,7 @@
             player.setTint(0xff0000);
             player.anims.play('turn');
             // Aplica una fuerza a la bomba para que se aleje
-            var forceX = (bomb.x > player.x) ? 200 : -500; // Fuerza horizontal
+            var forceX = (bomb.x > player.x) ? 300 : -500; // Fuerza horizontal
             var forceY = -500; // Fuerza vertical
 
             bomb.setVelocity(forceX, forceY);
