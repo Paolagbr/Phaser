@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Over</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            position: relative;
+            flex-direction: column;
+        }
+        
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        canvas {
+            position: absolute;
+        }
+        
+        .button-container {
+            position: absolute;
+            bottom: -10px;
+            left: 88%;
+        }
+        
+        .boton-imagen {
+            position: absolute;
+            bottom: 15px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: 60px;
+            /* Ajusta el tamaño */
+            height: auto;
+        }
+        
+        .boton-imagen img {
+            width: 320%;
+            height: auto;
+            transition: transform 0.2s;
+        }
+        
+        .boton-imagen img:hover {
+            transform: scale(1.5);
+            /* Efecto de zoom al pasar el mouse */
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    <video autoplay loop muted>
+        <source src="" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+    <canvas id="gameCanvas"></canvas>
+    <div class="button-container">
+        <button class="boton-imagen" onclick="window.location.href='WIN.html'">
+            <img src="/giphy.gif" alt="Volver al Inicio">
+        </button>
+    </div>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let opacity = 1;
+        let scale = 1;
+        let direction = -0.02;
+
+        function drawGameOver() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = `${210 * scale}px fantasy`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            // Contorno del texto
+            ctx.lineWidth = 18;
+            ctx.strokeStyle = "RED";
+            ctx.strokeText("G A M E    O V E R", canvas.width / 2, canvas.height / 2);
+
+            // Texto principal
+            ctx.fillStyle = `rgba(25255, 255, 255, ${opacity})`;
+            ctx.fillText("G A M E    O V E R", canvas.width / 2, canvas.height / 2);
+            opacity += direction;
+            scale += direction * 0.1;
+
+            if (opacity <= 0.3 || opacity >= 1) {
+                direction *= -1;
+            }
+
+            requestAnimationFrame(drawGameOver);
+        }
+
+        drawGameOver();
+    </script>
+</body>
+
+</html>

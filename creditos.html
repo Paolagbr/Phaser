@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créditos</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            position: relative;
+            flex-direction: column;
+        }
+        
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .credits {
+            position: absolute;
+            bottom: -100%;
+            width: 100%;
+            text-align: center;
+            font-size: 30px;
+            color: #FF4500;
+            font-family: fantasy;
+        }
+        
+        .button-container {
+            position: absolute;
+            bottom: 10px;
+            right: 88px;
+        }
+        
+        .boton-imagen {
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: 60px;
+            height: auto;
+        }
+        
+        .boton-imagen img {
+            width: 300%;
+            height: auto;
+            transition: transform 0.2s;
+        }
+        
+        .boton-imagen img:hover {
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+
+<body>
+    <video id="gameVideo" autoplay>
+        <source src="/Gravity Falls - Opening Theme Song - HD (online-video-cutter.com).mp4" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+
+    <div class="credits" id="credits">
+
+        <p>Alondra Lizbeth Ibarra Chávez</p>
+        <p>ID:347921</p>
+        <p>Cinthia Edith García de Luna</p>
+        <p>ID:347823</p>
+        <p>Paola Guadalupe Becerra Rodríguez</p>
+        <p>ID:280442</p>
+        <p>I N T E G R A N T E S:</p>
+        <br>
+        <p><strong>M I N I  P R O Y E C T O</strong> ---- P R I M E R P A R C I A L</p>
+        <br><br>
+        <p>viejos tiempos</p>
+        <p>serie animada parte de su infancia y recordar </p>
+        <p>donde los usuarios podrán explorar aquella </p>
+        <p>Ahora se convierte en un videojuego en </p>
+        <br><br>
+        <p>cuando eran niños.</p>
+        <p>mellizos durante su visita a unos familiares</p>
+        <p>compartidos por Depper y Mabel hermanos </p>
+        <p>inspirados en los viajes reales de verano </p>
+        <p>sobrenaturales de aventura y misterio, </p>
+        <p>La serie animada cuenta con elementos</p>
+    </div>
+
+    <div class="button-container">
+        <button class="boton-imagen" onclick="window.location.href='WIN.html'">
+            <img src="/giphy.gif" alt="Volver al Inicio">
+        </button>
+    </div>
+
+    <script>
+        const video = document.getElementById("gameVideo");
+        const credits = document.getElementById("credits");
+        let position = window.innerHeight; // Inicia fuera de la pantalla
+
+        function moveCredits() {
+            if (position > -credits.clientHeight) {
+                position -= 1; // Mueve los créditos hacia arriba
+                credits.style.bottom = position + "px";
+                requestAnimationFrame(moveCredits);
+            }
+        }
+
+        // Inicia el movimiento
+        moveCredits();
+
+        // Intentar reproducir con sonido
+        video.play().then(() => {
+            video.muted = false; // Desmutear el video si el navegador lo permite
+        }).catch(error => {
+            console.log("Autoplay con sonido bloqueado, requiriendo interacción del usuario.");
+            video.muted = true;
+        });
+
+        // Si el usuario interactúa con la página, activar sonido
+        document.addEventListener("click", () => {
+            video.muted = false;
+            video.play();
+        }, {
+            once: true
+        });
+    </script>
+</body>
+
+</html>
