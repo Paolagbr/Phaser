@@ -258,5 +258,7 @@ function perderVida(playerX, playerY) {
         gameOver = true;
         player.anims.play('turn');
         this.physics.pause();
+       // localStorage.setItem('puntuacionNivel1', score); // Guarda la puntuación
+        //window.location.href = 'Juego2.html';
     }
 }

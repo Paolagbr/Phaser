@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 10</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1920,
+            height: 1080,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 350 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var player;
+        var stars;
+        var bombs;
+        var platforms;
+        var cursors;
+        var score = 0;
+        var gameOver = false;
+        var scoreText;
+        var vidas = 3;
+        var vidasI = [];
+        //Tiempo de los objetos especiales del juego
+        var timeElapsed = 0;
+        let specialItemDuration = 20000;
+        var specialItemText;
+        var libroAparecido = false; //Variable para checar si ya aparecio el libro(objeto especial)
+        //Variables de troncos
+        var platformGroup = [];
+        var staticPlatforms = [//Coordenadas de los troncos
+            { x: 240, y: 1000, visible: true },
+            { x: 800, y: 1000, visible: true },
+            { x: 1400, y: 1000, visible: true },
+            { x: 2000, y: 1000, visible: true },
+            { x: 300, y: 700, visible: true },
+            { x: 600, y: 500, visible: true },
+            { x: 1000, y: 800, visible: true },
+            { x: 1500, y: 300, visible: true },
+            { x: 1800, y: 600, visible: true },
+            { x: 100, y: 900, visible: true },
+            { x: 900, y: 200, visible: true },
+            { x: 1600, y: 700, visible: true },
+            { x: 400, y: 400, visible: true },
+            { x: 600, y: 600, visible: true },
+            { x: 500, y: 900, visible: true },
+            { x: 800, y: 750, visible: true },
+            { x: 1200, y: 350, visible: true },
+            { x: 1500, y: 500, visible: true },
+            { x: 1350, y: 700, visible: true },
+            { x: 1100, y: 250, visible: true },
+            { x: 1400, y: 100, visible: true },
+            { x: 250, y: 200, visible: true }
+        ];
+
+        var maxPlatforms = staticPlatforms.length;
+        var game = new Phaser.Game(config);
+
+        function preload() {//Precargar las imagenes y recursos a usar
+            this.load.image('sky', 'assets/Nivel2.png');
+            this.load.image('ground', 'assets/tronco.png');
+            this.load.image('star', 'assets/bill.png');
+            this.load.image('bomb', 'assets/bomb.png');
+            this.load.image('vida', 'assets/vida.png');//vidas del jugador
+            this.load.image('special', 'assets/libro.png');//Especial
+            this.load.image('pause', 'assets/pausa.png');
+
+            this.load.spritesheet('dude', 'assets/dude.png',
+                { frameWidth: 32, frameHeight: 48 });
+        }
+
+        function create() {
+            //Fondo que se maneja en el juego
+            var sky = this.add.image(0, 0, 'sky').setOrigin(0, 0);
+            sky.setScale(2);
+
+            //Plataformas esticas en la parte  inferior de base
+            platforms = this.physics.add.staticGroup();
+            platforms.create(240, 1000, 'ground').setScale(2).refreshBody();
+            platforms.create(800, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();
+            platforms.create(1400, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();
+            platforms.create(2000, 1000, 'ground').setScale(2).setFlipX(true).refreshBody();
+
+            staticPlatforms.forEach(function (platformData, index) {
+                var platform = platforms.create(platformData.x, platformData.y, 'ground');
+                platform.setScale(0.5).refreshBody();
+                platform.body.allowGravity = false;
+                platform.setVisible(platformData.visible);
+                platform.body.enable = platformData.visible;
+                platformGroup.push(platform);
+
+                // Aplicar el tween a algunas plataformas aleatorias
+                if (index % 1 === 0) { // Aplicar el tween a cada tercera plataforma (puedes ajustar esta lógica)
+                    this.tweens.add({
+                        targets: platform,
+                        x: platformData.x + 200, // Ajusta la distancia de movimiento
+                        duration: 6000, // Ajusta la duración
+                        yoyo: true,
+                        repeat: -1,//Direccion contraria
+                        ease: "Linear",
+                        onUpdate: () => {
+                            platform.refreshBody();
+                        }
+                    });
+                }
+            }, this);
+
+            //Jugador
+            player = this.physics.add.sprite(100, 450, 'dude');
+            player.setBounce(0.2);
+            player.setCollideWorldBounds(true);
+            player.setVelocityY(0);
+
+            //Animaciones del personaje
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            })
+
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'dude', frame: 4 }],
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            cursors = this.input.keyboard.createCursorKeys();
+
+            bombs = this.physics.add.group();
+
+            //Mensajes  pantalla como lo es tiempo y el puntaje
+            Nivel = this.add.text(10, 180, 'NIVEL 2', { fontSize: '32px', fill: '#ffffff',  fontWeight: 'bold' });
+            scoreText = this.add.text(10, 140, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
+
+
+
+            for (var i = 0; i < vidas; i++) {//Cada que se pierde una vida desaparece una imagen del tablero
+                var vidaImagen = this.add.image(30 + (i * 30), 120, 'vida').setScale(1);
+                vidasI.push(vidaImagen);
+            }
+
+            //Bills de forma estica  aa lo largo de la pantalla
+            stars = this.physics.add.group();
+            var starPositions = [
+                { x: 200, y: 800 },
+                { x: 300, y: 700 },
+                /* { x: 450, y: 750 },
+                { x: 700, y: 600 },
+                { x: 850, y: 850 },
+                { x: 1100, y: 650 },
+                { x: 500, y: 480 },
+                { x: 500, y: 680 },
+                { x: 300, y: 500 },
+                { x: 1800, y: 360 },
+                { x: 200, y: 410 },
+                { x: 600, y: 900 },
+                { x: 850, y: 680 },
+                { x: 200, y: 580 },
+                { x: 400, y: 360 },
+                { x: 600, y: 410 },
+                { x: 900, y: 900 },
+                { x: 1300, y: 400 },
+                { x: 1600, y: 250 },
+                { x: 1800, y: 700 },*/
+            ];
+            starPositions.forEach(function (pos) {//Acomodo de las estrellas en la posicion indicada
+                var star = stars.create(pos.x, pos.y, 'star');
+                star.setBounce(0);
+                star.body.allowGravity = false;
+            });
+            totalStars = starPositions.length;//Total de bills
+
+            // Aparecen los libros que suman puntos al jugador
+            specialItems = this.physics.add.group();
+            this.time.addEvent({
+                delay: 10000, // Cada 10 segundos
+                callback: createSpecialItem,
+                callbackScope: this,
+                loop: true
+            });
+            this.physics.add.overlap(player, specialItems, collectSpecialItem, null, this);
+
+            // Crreacion de bombas iniciales
+            for (var i = 0; i < 8; i++) {
+                var x = Phaser.Math.Between(100, config.width - 100);
+                var bomb = bombs.create(x, 0, 'bomb');
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true);
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                bomb.allowGravity = true; // Asegúrate de que la gravedad esté activada
+            }
+            //Coalisiones
+            this.physics.add.collider(player, platforms);
+            this.physics.add.collider(bombs, platforms);
+            this.physics.add.overlap(player, stars, collectStaticStar, null, this);
+            // this.physics.add.collider(player, bombs, hitBomb, null, this);
+            this.physics.add.overlap(player, bombs, hitBomb, null, this);
+            this.physics.add.collider(player, platforms, platformCollision, null, this);
+
+
+            //Pusa del juego
+            this.pauseImage = this.add.image(1750, 150, 'pause').setInteractive();
+            this.pauseImage.setScale(1);
+
+            //Cada que se da clic se pone pausa
+            
+            this.pauseImage.on('pointerdown', () => {
+                if (this.physics.world.isPaused) {
+                    this.physics.world.resume();
+                    this.pauseImage.setScale(1);
+                } else {
+                    this.physics.world.pause();
+                    this.pauseImage.setScale(3);
+                    this.pauseImage.setVisible(true);
+                }
+            });
+
+        }
+
+        function update() {
+            if (gameOver) {
+                return;
+            }
+
+            if (cursors.left.isDown) {
+                player.setVelocityX(-250);
+                player.anims.play('left', true);
+            } else if (cursors.right.isDown) {
+                player.setVelocityX(250);
+                player.anims.play('right', true);
+            } else {
+                player.setVelocityX(0);
+                player.anims.play('turn');
+            }
+
+            // Lógica de salto mejorada
+            if (cursors.up.isDown && player.body.touching.down) {
+                player.setVelocityY(-330);
+            }
+
+            // Mantener al jugador dentro de los límites de la pantalla
+            if (player.x < 0) {
+                player.x = 0;
+                player.setVelocityX(0);
+            }
+            if (player.x > config.width) {
+                player.x = config.width;
+                player.setVelocityX(0);
+            }
+
+            if (player.body.touching.down && player.body.velocity.y === 0) {
+                player.setVelocityY(0);
+            }
+
+            // Desaparecer y reaparecer plataformas aleatorias
+            if (Math.random() < 0.02) {
+                togglePlatform.call(this);
+            }
+        }
+        //Funcion del Libro
+        function createSpecialItem() {
+            if (libroAparecido) {//Checa si ya aparecio el libro en pantalla
+                return; 
+            }
+
+            var x = Phaser.Math.Between(100, config.width - 100);
+            var specialItem = specialItems.create(x, 0, 'special');
+            specialItem.setBounce(1);
+            specialItem.setCollideWorldBounds(true);
+            specialItem.setVelocity(0, 20);
+            specialItem.allowGravity = false;
+
+            var timeLeft = specialItemDuration / 1000;
+            specialItemText = this.add.text(80, 210, 'Tiempo libro: ' + timeLeft, { fontSize: '30px', fill: '#ffffff' });
+
+            var scene = this;
+
+            this.countdown = this.time.addEvent({
+                delay: 1000,
+                callback: function () {
+                    timeLeft--;
+                    specialItemText.setText('Tiempo libro: ' + timeLeft);
+                    if (timeLeft <= 0) {
+                        specialItemText.destroy();
+                        if (scene.countdown) {
+                            scene.countdown.remove(false);
+                            scene.countdown = null;
+                        }
+                    }
+                },
+                callbackScope: this,
+                loop: true
+            });
+
+            this.time.delayedCall(specialItemDuration, () => {
+                specialItem.destroy();
+                if (specialItemText) {
+                    specialItemText.destroy();
+                }
+            });
+
+            libroAparecido = true; //Cambia la variable a verdadero porque ya aparecio el libro
+        }
+        function collectSpecialItem(player, specialItem) {
+            specialItem.destroy(); // Destruye el libro despues de que lo toca el personaje
+            score += 100; // Aumenta la puntuación (puedes ajustar el valor)
+            scoreText.setText('Score: ' + score);//Se suman los puntos si el monito lo toca
+        }
+
+
+        // Función para alternar la visibilidad de las plataformas aleatorias
+        function togglePlatform() {
+            var platform = platformGroup[Phaser.Math.Between(2, maxPlatforms - 1)]; // Empieza desde la quinta plataforma
+            if (platform.visible) {
+                platform.setVisible(false);
+                platform.body.enable = false;
+            } else {
+                platform.setVisible(true);
+                platform.body.enable = true;
+            }
+        }
+
+        // Función de coalisión con la plataforma con el jugador
+        function platformCollision(player, platform) {
+            if (platform.visible) {
+                this.physics.world.colliders.add(player, platform);
+            } else {
+                this.physics.world.colliders.remove(player, platform);
+            }
+        }
+        //Suma de puntos del jugador
+        function collectStaticStar(player, star) {
+            star.destroy(); // Destruye la estrella
+            score += 10; // Aumenta la puntuación
+            scoreText.setText('Score: ' + score);
+            totalStars--;
+
+            // Verifica si se recolectaron todas las estrellas cuando suceda se acaba el juego
+            if (totalStars === 0) {
+                gameOver = true;//Se acaba el juego
+                player.anims.play('turn');
+                this.physics.pause();
+            }
+        }
+
+        function hitBomb(player, bomb) {
+            var playerX = player.x;
+            var playerY = player.y;
+
+            player.setTint(0xff0000);
+            player.anims.play('turn');
+            // Aplica una fuerza a la bomba para que se aleje
+            var forceX = (bomb.x > player.x) ? 200 : -200; // Fuerza horizontal
+            var forceY = -200; // Fuerza vertical
+
+            bomb.setVelocity(forceX, forceY);
+            perderVida.call(this, playerX, playerY);
+
+        }
+
+        function perderVida(playerX, playerY) {
+            vidas--;
+            if (vidas >= 0) {
+                this.time.delayedCall(500, () => {
+                    player.clearTint();
+                    player.setPosition(playerX, playerY);
+                    player.setVelocity(0, 0);
+                    this.physics.resume();
+
+                    if (vidasI.length > 0) {
+                        let vidaPerdida = vidasI.pop();
+                        vidaPerdida.destroy();
+                    }
+                });
+            }
+
+            if (vidas === -1) {//Si ya no hay vidas  se acaba el juego
+                gameOver = true;
+                player.anims.play('turn');
+                this.physics.pause();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
+
+
