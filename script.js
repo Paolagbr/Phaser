@@ -35,7 +35,14 @@ var gameOver = false;
 var scoreText;
 var vidas = 3;
 var vidasI = [];//Almacena las imagenes de las vidas
+const fecha = new Date();
+const dia = fecha.getDate();
+const mes = fecha.getMonth() + 1;
+const year = fecha.getFullYear();
+const fechaC = `${dia}/${mes}/${year}`;
 
+//Recuperar el nombre del jugador
+var alias = localStorage.getItem("alias");
 // Función para precargar los recursos
 function preload() {
     this.load.image('sky', 'assets/Fondo.webp');
@@ -105,9 +112,11 @@ function create() {
     // Bombas
     bombs = this.physics.add.group();
 
-    // Texto de puntuación
+    // Datos a pantalla
     Nivel = this.add.text(10, 150, 'NIVEL 1', { fontSize: '32px', fill: '#ffffff', fontWeight: 'bold' });
     scoreText = this.add.text(10, 190, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
+    Nom=this.add.text(10, 230, 'Jugador:'+ alias, { fontSize: '32px', fill: '#ffffff' });
+    Date=this.add.text(10, 265, 'Fecha:'+ fechaC, { fontSize: '32px', fill: '#ffffff' });
 
     // Colisiones
     this.physics.add.collider(player, platforms);
@@ -136,7 +145,7 @@ function create() {
     this.pauseImage.setScale(1);
 
     // Cada que se da clic se pone pausa
-    this.pauseImage.on('pointerdown', function() {
+    this.pauseImage.on('pointerdown', function () {
         if (scene.physics.world.isPaused) {
             scene.physics.world.resume();
             scene.pauseImage.setScale(1);
@@ -190,7 +199,7 @@ function configurarAnimaciones(scene, personaje) {
             repeat: -1
         });
     }
-    
+
 
 }
 
@@ -282,7 +291,6 @@ function perderVida(playerX, playerY) {
         gameOver = true;
         player.anims.play('turn');
         this.physics.pause();
-        // localStorage.setItem('puntuacionNivel1', score); // Guarda la puntuación
-        //window.location.href = 'Juego2.html';
+       // window.location.href = 'Juego2.html';
     }
 }

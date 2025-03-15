@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Alias con Teclado Virtual</title>
     <style>
         @font-face {
@@ -27,7 +28,7 @@
 
         #aliasDisplay {
             font-size: 28px;
-            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
             margin: 5px;
             padding: 10px;
             border: 2px solid #000;
@@ -43,8 +44,8 @@
             justify-content: center;
             gap: 5px;
             max-width: 1000px;
-            margin: 20px auto;
-            margin-top: 20px;
+            margin: 10px auto;
+            margin-top: 10px;
         }
 
         .tecla {
@@ -71,9 +72,10 @@
             background: rgb(80, 201, 80);
             color: white;
             border: none;
-            border-radius: 2px ;
+            border-radius: 2px;
         }
-        h2{
+
+        h2 {
             font-family: 'Titulo';
             font-size: 3.6rem;
         }
@@ -83,12 +85,23 @@
             background: red;
             color: white;
         }
-        #continuar{
+
+        #continuar {
             margin-left: 80%;
             background: #dbcc4e;
             font-size: 1.5rem;
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             padding: 10px;
+        }
+
+        #alerta {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translate(70%, 0);
+           /* z-index: 1450;*/
+           max-width: 500px;
+
         }
     </style>
 </head>
@@ -100,18 +113,18 @@
     <br>
     <button id="guardar">Guardar Alias</button>
     <button id="continuar" onclick="location.href='personajes.html'">Continuar</button>
-
-    <p id="mensaje"></p>
+    <div id="alerta"></div>
+    <!-- <p id="mensaje"></p> -->
 
     <script>
-        const teclas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'.split('');
+      
+      const teclas = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'.split('');
         const tecladoDiv = document.getElementById('teclado');
         const aliasDisplay = document.getElementById('aliasDisplay');
         let alias = '';
 
         // Crear teclas
-        teclas.forEach(tecla => {//Ciclo que genera un boton acorde a las letras
-
+        teclas.forEach(tecla => {
             let boton = document.createElement('button');
             boton.textContent = tecla;
             boton.classList.add('tecla');
@@ -130,24 +143,42 @@
         borrarBoton.classList.add('tecla');
         borrarBoton.id = 'borrar';
         borrarBoton.onclick = function () {
-            alias = alias.slice(0, -1); // Eliminar el último carácter
+            alias = alias.slice(0, -1);
             aliasDisplay.textContent = alias;
         };
         tecladoDiv.appendChild(borrarBoton);
 
-        // Guardar alias
         document.getElementById('guardar').onclick = function () {
+            const alias = aliasDisplay.textContent.trim(); // Obtener alias de aliasDisplay
+            console.log("alias obtenido: ", alias);
+
             if (alias.length >= 4 && alias.length <= 8) {
-                if (!localStorage.getItem(alias)) {
-                    localStorage.setItem(alias, 'jugador');
-                    document.getElementById('mensaje').textContent = 'Alias guardado con éxito';
-                } else {
-                    document.getElementById('mensaje').textContent = 'El alias ya existe';
-                }
+                let aliasList = JSON.parse(localStorage.getItem('aliasList')) || [];
+                aliasList.push(alias);
+                localStorage.setItem('alias', alias);
+                localStorage.setItem('aliasList', JSON.stringify(aliasList));
+                showAlert('Alias guardado con éxito', 'success');
             } else {
-                document.getElementById('mensaje').textContent = 'El alias debe tener entre 4 y 8 caracteres';
+                showAlert('El alias debe tener entre 4 y 8 caracteres', 'warning');
             }
         };
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alerta');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            alertContainer.appendChild(alertDiv);
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+      
     </script>
 </body>
 
