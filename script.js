@@ -225,14 +225,23 @@ function update() {
 }
 
 // Función para recolectar estrellas
-function collectStar(player, star) {
+function collectStar (player, star) {
     star.disableBody(true, true);
 
     score += 10;
     scoreText.setText('Puntuación: ' + score);
 
+    if (score >= 50) {
+        /*console.log("Cambiando de nivel en 1 segundo...");
+        setTimeout(() => {*/
+            /*window.location.href = 'Juego2.html?nocache=' + new Date().getTime();*/
+            window.location.href = 'Juego2.html';
+
+        /*}, 1000);*/
+    }
+
     if (stars.countActive(true) === 0) {
-        stars.children.iterate(function(child) {
+        stars.children.iterate(function (child) {
             child.enableBody(true, child.x, 0, true, true);
         });
 
@@ -243,6 +252,16 @@ function collectStar(player, star) {
         bomb.setCollideWorldBounds(true);
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
+    }
+}
+
+function collectSpecialItem (player,  specialItem){
+    specialItem.destroy();
+    score +=100;
+    scoreText.setText('Score: '+score);
+
+    if(score >=50){
+        pasarANivelSiguiente.call(this);
     }
 }
 
