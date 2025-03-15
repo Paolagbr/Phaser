@@ -475,6 +475,7 @@
                 player.anims.play('turn');
                 this.physics.pause();
                 guardarDatosJuego(alias, score, fechaC);
+                window.location.href = 'Win.html';
             }
         }
 
@@ -514,6 +515,7 @@
                 player.anims.play('turn');
                 this.physics.pause();
                 guardarDatosJuego(alias, score, fechaC);
+                window.location.href = 'GameOver.html';
             }
         }
         function guardarDatosJuego(alias, score, fecha) {

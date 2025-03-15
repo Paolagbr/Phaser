@@ -309,9 +309,10 @@ function perderVida(playerX, playerY) {
         localStorage.setItem("ultimoAlias", alias);
 
         // Redirigir a la pantalla de Game Over después de 2 segundos
-        setTimeout(() => {
+      /*  setTimeout(() => {
             window.location.href = "GameOver.html";
-        }, 1000);
+        }, 1000);*/
+        window.location.href = 'GameOver.html';
     }
 }
 
