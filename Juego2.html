@@ -388,8 +388,8 @@
             player.setTint(0xff0000);
             player.anims.play('turn');
             // Aplica una fuerza a la bomba para que se aleje
-            var forceX = (bomb.x > player.x) ? 200 : -200; // Fuerza horizontal
-            var forceY = -200; // Fuerza vertical
+            var forceX = (bomb.x > player.x) ? 400 : -400; // Fuerza horizontal
+            var forceY = -400; // Fuerza vertical
 
             bomb.setVelocity(forceX, forceY);
             perderVida.call(this, playerX, playerY);
@@ -412,7 +412,7 @@
                 });
             }
 
-            if (vidas === -1) {//Si ya no hay vidas  se acaba el juego
+            if (vidas == 0) {//Si ya no hay vidas  se acaba el juego
                 gameOver = true;
                 player.anims.play('turn');
                 this.physics.pause();

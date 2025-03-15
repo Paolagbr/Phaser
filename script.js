@@ -256,20 +256,10 @@ function hitBomb(player, bomb) {
     //bomb.setVelocity(Phaser.Math.Between(-200, 200), Phaser.Math.Between(-200, 200));
 
     // Aplica una fuerza a la bomba para que se aleje
-    var forceX = (bomb.x > player.x) ? 200 : -200; // Fuerza horizontal
-    var forceY = -200; // Fuerza vertical
+    var forceX = (bomb.x > player.x) ? 400 : -400; // Fuerza horizontal
+    var forceY = -400; // Fuerza vertical
     bomb.setVelocity(forceX, forceY);
     perderVida.call(this, playerX, playerY);
-    /* if(vidas<=3){
-       vidas--;
-       player.setTint(0xff0000);
-
-   }else if(vidas===0){
-       this.physics.pause();
-       player.setTint(0xff0000);
-       player.anims.play('turn');
-       gameOver = true;
-   }*/
 }
 function perderVida(playerX, playerY) {
     vidas--;
@@ -287,7 +277,7 @@ function perderVida(playerX, playerY) {
         });
     }
 
-    if (vidas < 1) {
+    if (vidas == 0) {
         gameOver = true;
         player.anims.play('turn');
         this.physics.pause();
