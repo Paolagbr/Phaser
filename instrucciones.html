@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrucciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('/pant/instrucciones.jpg') no-repeat center center;
+            background-size: cover;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 32px;
+        }
+        
+        .instruction-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .instruction {
+            background: rgba(247, 196, 50, 0.86);
+            padding: 10px;
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+            font-size: 18px;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slideIn 0.8s forwards;
+        }
+        /* Animaciones */
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        /* Retraso en la animación de cada punto */
+        
+        .instruction:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+        
+        .instruction:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+        
+        .instruction:nth-child(3) {
+            animation-delay: 0.9s;
+        }
+        
+        .instruction:nth-child(4) {
+            animation-delay: 1.2s;
+        }
+        
+        .instruction:nth-child(5) {
+            animation-delay: 1.5s;
+        }
+        
+        .instruction:nth-child(5) {
+            animation-delay: 1.8s;
+        }
+        
+        .button-container {
+            position: absolute;
+            bottom: -10px;
+            left: 88%;
+        }
+        
+        .boton-imagen {
+            position: absolute;
+            bottom: 15px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: 60px;
+            /* Ajusta el tamaño */
+            height: auto;
+        }
+        
+        .boton-imagen img {
+            width: 320%;
+            height: auto;
+            transition: transform 0.2s;
+        }
+        
+        .boton-imagen img:hover {
+            transform: scale(1.5);
+            /* Efecto de zoom al pasar el mouse */
+        }
+        /*Mabel*/
+        
+        .btn-container {
+            position: absolute;
+            bottom: -10px;
+            right: 100%;
+        }
+        
+        .btn-container img {
+            position: absolute;
+            bottom: 35px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: auto;
+            /* Ajusta el tamaño */
+            height: auto;
+        }
+        /*Dipper*/
+        
+        .butn-container {
+            position: absolute;
+            bottom: -10px;
+            left: 70%;
+        }
+        
+        .butn-container img {
+            position: absolute;
+            bottom: 35px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            outline: none;
+            width: auto;
+            /* Ajusta el tamaño */
+            height: 310px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Gravity Falls</h1>
+        <h2>📜 Instrucciones</h2>
+        <h3>El juego contiene 2 jugadores</h3>
+        <h2>Mabel - Dipper.</h2>
+
+        <div class="instruction-container">
+            <div class="instruction"> Usa las flechas del teclado para mover al personaje.</div>
+            <div class="instruction">⬆ Flecha arriba para saltar.</div>
+            <div class="instruction"> Recoge a todos los Bill Cepher para sumar puntos.</div>
+            <div class="instruction">Evita las bombas o perderás vidas.</div>
+            <div class="instruction">Solo tienes 3 vidas, no las desaproveches</div>
+        </div>
+        <h1> SUERTE JUGANDO LA NECESITARÁS</h1>
+
+        <div class="button-container">
+            <button class="boton-imagen" onclick="window.location.href='WIN.html'">
+                <img src="/pant/giphy.gif" alt="Volver al Inicio">
+            </button>
+        </div>
+
+        <div class="btn-container">
+            <img src="/pant/mabelG.gif">
+        </div>
+
+        <div class="butn-container">
+            <img src="/pant/dip.gif">
+        </div>
+
+</body>
+
+</html>

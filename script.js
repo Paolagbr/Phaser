@@ -140,7 +140,7 @@ function create() {
     configurarAnimaciones(this, personajeSeleccionado)
     cursors = this.input.keyboard.createCursorKeys();
     var scene = this;
-    
+
     // Pausa del juego
     this.pauseImage = this.add.image(1750, 150, 'pause').setInteractive();
     this.pauseImage.setScale(1);
@@ -225,23 +225,23 @@ function update() {
 }
 
 // Función para recolectar estrellas
-function collectStar (player, star) {
+function collectStar(player, star) {
     star.disableBody(true, true);
 
     score += 10;
     scoreText.setText('Puntuación: ' + score);
 
-    if (score >= 50) {
+    if (score >= 400) {
         /*console.log("Cambiando de nivel en 1 segundo...");
         setTimeout(() => {*/
-            /*window.location.href = 'Juego2.html?nocache=' + new Date().getTime();*/
-            window.location.href = 'Juego2.html';
+        /*window.location.href = 'Juego2.html?nocache=' + new Date().getTime();*/
+        window.location.href = 'Juego2.html';
 
         /*}, 1000);*/
     }
 
     if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
+        stars.children.iterate(function(child) {
             child.enableBody(true, child.x, 0, true, true);
         });
 
@@ -255,12 +255,12 @@ function collectStar (player, star) {
     }
 }
 
-function collectSpecialItem (player,  specialItem){
+function collectSpecialItem(player, specialItem) {
     specialItem.destroy();
-    score +=100;
-    scoreText.setText('Score: '+score);
+    score += 100;
+    scoreText.setText('Score: ' + score);
 
-    if(score >=50){
+    if (score >= 50) {
         pasarANivelSiguiente.call(this);
     }
 }
