@@ -1,5 +1,5 @@
 // Recuperar el personaje seleccionado desde localStorage
-var personajeSeleccionado = localStorage.getItem("personajeSeleccionado") || "drag1"; 
+var personajeSeleccionado = localStorage.getItem("personajeSeleccionado") || "drag1";
 
 // Configuración del juego
 var config = {
@@ -26,7 +26,7 @@ var game = new Phaser.Game(config);
 // Variables globales
 var player;
 var stars;
-var vidas=3;
+var vidas = 3;
 var bombs;
 var platforms;
 var cursors;
@@ -37,12 +37,13 @@ var vidas = 3;
 var vidasI = [];//Almacena las imagenes de las vidas
 
 // Función para precargar los recursos
-function preload () {
+function preload() {
     this.load.image('sky', 'assets/Fondo.webp');
     this.load.image('ground', 'assets/tronco.png');
     this.load.image('star', 'assets/bill.png');
     this.load.image('bomb', 'assets/Hectorgon.png');
     this.load.image('vida', 'assets/vida.png');
+    this.load.image('pause', 'assets/pausa.png');
 
     // Cargar el sprite del personaje seleccionado usando los ids "drag1" y "drag2"
     if (personajeSeleccionado === "drag1") {
@@ -55,7 +56,7 @@ function preload () {
 }
 
 // Función para crear los elementos del juego
-function create () {
+function create() {
     // Fondo
     var sky = this.add.image(0, 0, 'sky').setOrigin(0, 0);
     sky.setScale(2);//Se muestra el fondo de pantalla
@@ -77,8 +78,8 @@ function create () {
     platforms.create(1500, 450, 'ground').setScale(0.5).setFlipX(true).refreshBody();
     platforms.create(1750, 700, 'ground').setScale(0.5).setFlipX(true).refreshBody();
     platforms.create(1500, 750, 'ground').setScale(0.75).setFlipX(true).refreshBody();
-    
-        // Jugador
+
+    // Jugador
     player = this.physics.add.sprite(100, 750, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
@@ -97,7 +98,7 @@ function create () {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
-    stars.children.iterate(function(child){
+    stars.children.iterate(function (child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
@@ -105,13 +106,14 @@ function create () {
     bombs = this.physics.add.group();
 
     // Texto de puntuación
-    scoreText = this.add.text(16, 16, 'Puntuación: 0', { fontSize: '32px', fill: '#000' });
+    Nivel = this.add.text(10, 150, 'NIVEL 1', { fontSize: '32px', fill: '#ffffff', fontWeight: 'bold' });
+    scoreText = this.add.text(10, 190, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
 
     // Colisiones
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    this.physics.add.overlap(player, bombs, hitBomb, null, this);
 
     // Solapamiento entre el jugador y las estrellas
     this.physics.add.overlap(player, stars, collectStar, null, this);
@@ -120,63 +122,80 @@ function create () {
     cursors = this.input.keyboard.createCursorKeys();
 
     //Se muestran las vidas del jugador
-    
+
     for (var i = 0; i < vidas; i++) {
-        var vidaImagen = this.add.image(20 + (i * 30), 100, 'vida').setScale(0.8);
+        var vidaImagen = this.add.image(30 + (i * 30), 120, 'vida').setScale(1);
         vidasI.push(vidaImagen);
     }
 
     configurarAnimaciones(this, personajeSeleccionado)
-        cursors = this.input.keyboard.createCursorKeys();
+    cursors = this.input.keyboard.createCursorKeys();
+    var scene = this;
+    // Pausa del juego
+    this.pauseImage = this.add.image(1750, 150, 'pause').setInteractive();
+    this.pauseImage.setScale(1);
+
+    // Cada que se da clic se pone pausa
+    this.pauseImage.on('pointerdown', function() {
+        if (scene.physics.world.isPaused) {
+            scene.physics.world.resume();
+            scene.pauseImage.setScale(1);
+        } else {
+            scene.physics.world.pause();
+            scene.pauseImage.setScale(3);
+            scene.pauseImage.setVisible(true);
+        }
+    });
+}
+//Configurar animaciones según el personaje
+function configurarAnimaciones(scene, personaje) {
+    if (personaje === "drag1") {
+        scene.anims.create({
+            key: 'left',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 2, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        scene.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 8 }],
+            frameRate: 20,
+        });
+
+        scene.anims.create({
+            key: 'right',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    } else if (personaje === "drag2") {
+        scene.anims.create({
+            key: 'left',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        scene.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 8 }],
+            frameRate: 20
+        });
+
+        scene.anims.create({
+            key: 'right',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
+            frameRate: 10,
+            repeat: -1
+        });
     }
+    
 
-    //Configurar animaciones según el personaje
-    function configurarAnimaciones(scene, personaje){
-        if(personaje === "drag1"){
-            scene.anims.create({
-                key: 'left',
-                frames: scene.anims.generateFrameNumbers('dude', {start: 2, end: 7}),
-                frameRate: 10,
-                repeat: -1
-            });
-
-            scene.anims.create({
-                key: 'turn',
-                frames:[{key: 'dude', frame: 8}],
-                frameRate: 20,
-            });
-
-            scene.anims.create({
-                key: 'right',
-                frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
-                frameRate: 10,
-                repeat: -1
-            });
-        } else if(personaje === "drag2") {
-            scene.anims.create({
-                key: 'left',
-                frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
-                frameRate: 10,
-                repeat: -1
-            });
-
-            scene.anims.create({
-                key: 'turn',
-                frames: [{ key: 'dude', frame: 8 }],
-                frameRate: 20
-            });
-
-            scene.anims.create({
-                key: 'right',
-                frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
-                frameRate: 10,
-                repeat: -1
-            });
-    }
 }
 
 // Función de actualización
-function update () {
+function update() {
     if (gameOver) return;
 
     if (cursors.left.isDown) {
@@ -196,7 +215,7 @@ function update () {
 }
 
 // Función para recolectar estrellas
-function collectStar (player, star) {
+function collectStar(player, star) {
     star.disableBody(true, true);
 
     score += 10;
@@ -218,25 +237,30 @@ function collectStar (player, star) {
 }
 
 // Función para manejar la colisión con bombas y vidas
-function hitBomb (player, bomb) {
+function hitBomb(player, bomb) {
     var playerX = player.x;//El jugador se mantega en su posicion 
     var playerY = player.y;
 
     player.setTint(0xff0000);
     player.anims.play('turn');
+    //perderVida.call(this, playerX, playerY);
+    //bomb.setVelocity(Phaser.Math.Between(-200, 200), Phaser.Math.Between(-200, 200));
+
+    // Aplica una fuerza a la bomba para que se aleje
+    var forceX = (bomb.x > player.x) ? 200 : -200; // Fuerza horizontal
+    var forceY = -200; // Fuerza vertical
+    bomb.setVelocity(forceX, forceY);
     perderVida.call(this, playerX, playerY);
-    bomb.setVelocity(Phaser.Math.Between(-200, 200), Phaser.Math.Between(-200, 200));
+    /* if(vidas<=3){
+       vidas--;
+       player.setTint(0xff0000);
 
-   /* if(vidas<=3){
-        vidas--;
-        player.setTint(0xff0000);
-
-    }else if(vidas===0){
-        this.physics.pause();
-        player.setTint(0xff0000);
-        player.anims.play('turn');
-        gameOver = true;
-    }*/
+   }else if(vidas===0){
+       this.physics.pause();
+       player.setTint(0xff0000);
+       player.anims.play('turn');
+       gameOver = true;
+   }*/
 }
 function perderVida(playerX, playerY) {
     vidas--;
@@ -258,7 +282,7 @@ function perderVida(playerX, playerY) {
         gameOver = true;
         player.anims.play('turn');
         this.physics.pause();
-       // localStorage.setItem('puntuacionNivel1', score); // Guarda la puntuación
+        // localStorage.setItem('puntuacionNivel1', score); // Guarda la puntuación
         //window.location.href = 'Juego2.html';
     }
 }
