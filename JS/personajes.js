@@ -63,3 +63,11 @@ if (personajeSeleccionado) {
 } else {
     console.log("No se ha seleccionado ningún personaje.");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sound = document.getElementById("audioReinas");
+    function playSound() {
+        sound.play().catch(() => setTimeout(playSound, 500));
+    }
+    playSound();
+});

@@ -178,8 +178,22 @@
                 alertDiv.remove();
             }, 3000);
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const sound = document.getElementById("audioFondo");
+            function playSound() {
+                sound.play().catch(() => setTimeout(playSound, 500));
+            }
+            playSound();
+        });
       
     </script>
+
+    <!-- Musica -->
+    <audio id="audioFondo" loop>
+        <source src="/pant/Reina Disco - BABBA (Gravity Falls).mp3" type="audio/mpeg">
+    </audio>
+
 </body>
 
 </html>
