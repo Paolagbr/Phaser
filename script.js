@@ -140,6 +140,7 @@ function create() {
     configurarAnimaciones(this, personajeSeleccionado)
     cursors = this.input.keyboard.createCursorKeys();
     var scene = this;
+    
     // Pausa del juego
     this.pauseImage = this.add.image(1750, 150, 'pause').setInteractive();
     this.pauseImage.setScale(1);

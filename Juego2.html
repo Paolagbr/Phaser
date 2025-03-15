@@ -22,6 +22,8 @@
 <body>
 
     <script type="text/javascript">
+        // Recuperar el personaje seleccionado desde localStorage
+        var personajeSeleccionado = localStorage.getItem("personajeSeleccionado") || "drag1";
 
         var config = {
             type: Phaser.AUTO,
@@ -104,8 +106,17 @@
             this.load.image('special', 'assets/libro.png');//Especial
             this.load.image('pause', 'assets/pausa.png');
 
-            this.load.spritesheet('dude', 'assets/dude.png',
-                { frameWidth: 32, frameHeight: 48 });
+            /* this.load.spritesheet('dude', 'assets/dude.png',
+                 { frameWidth: 32, frameHeight: 48 });*/
+
+            // Cargar el sprite del personaje seleccionado usando los ids "drag1" y "drag2"
+            if (personajeSeleccionado === "drag1") {
+                this.load.spritesheet('dude', 'assets/Mabelonga.png', { frameWidth: 66, frameHeight: 80 });
+            } else if (personajeSeleccionado === "drag2") {
+                this.load.spritesheet('dude', 'img/Adobe.png', { frameWidth: 43, frameHeight: 80 });
+            }
+
+            console.log("Personaje cargado en el juego: ", personajeSeleccionado);
         }
 
         function create() {
@@ -274,9 +285,11 @@
             if (cursors.left.isDown) {
                 player.setVelocityX(-250);
                 player.anims.play('left', true);
+                player.setFlipX(true); 
             } else if (cursors.right.isDown) {
                 player.setVelocityX(250);
                 player.anims.play('right', true);
+                player.setFlipX(true); 
             } else {
                 player.setVelocityX(0);
                 player.anims.play('turn');
