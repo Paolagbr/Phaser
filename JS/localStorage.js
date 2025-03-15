@@ -19,3 +19,9 @@ function renderGameData() {
 }
 
 renderGameData();
+
+document.addEventListener("click", function() {
+    var audio = document.getElementById("audioFondo");
+    audio.play().catch(error => console.error("Error al reproducir audio:", error));
+    document.removeEventListener("click", arguments.callee);
+});
