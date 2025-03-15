@@ -24,7 +24,7 @@
         <div class="boton-container">
             <button class="boton" onclick="location.href='Alias.html'">JUGAR</button>
             <button class="boton" onclick="location.href='LocalStorage.html'">RECORDS</button>
-            <button class="boton" a href="#.html">INSTRUCCIONES</button>
+            <button class="boton" onclick="location.href='instrucciones.html'">RECORDS</button>
             <button class="boton" onclick="location.href='creditos.html'">CRÉDITOS</button>
             <button class="boton" onclick="cerrarVentana()">SALIDA</button>
         </div>
@@ -36,20 +36,22 @@
     <!--Sonido de Fondo-->
     <script>
         /*document.addEventListener("click", function() {
-            var audio = document.getElementById("audioFondo");
-            audio.play().catch(error => console.error("Error al reproducir audio:", error));
-            document.removeEventListener("click", arguments.callee);
-        });
-        function cerrarVentana() {
-        window.close();
-    }*/
+                    var audio = document.getElementById("audioFondo");
+                    audio.play().catch(error => console.error("Error al reproducir audio:", error));
+                    document.removeEventListener("click", arguments.callee);
+                });
+                function cerrarVentana() {
+                window.close();
+            }*/
 
-    document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => {
             const sound = document.getElementById("audioFondo");
+
             function playSound() {
                 sound.play().catch(() => setTimeout(playSound, 500));
             }
             playSound();
+
             function cerrarVentana() {
                 window.close();
             }
