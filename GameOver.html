@@ -69,9 +69,12 @@
     </video>
     <canvas id="gameCanvas"></canvas>
     <div class="button-container">
-        <button class="boton-imagen" onclick="window.location.href='WIN.html'">
-            <img src="" alt="Volver al Inicio">
+        <button class="boton-imagen" onclick="window.location.href='index.html'">
+            <img src="pant/giphy.gif" alt="Volver al Inicio">
         </button>
+        <audio id="audioFondo" loop>
+            <source src="/pant/Game Over sound effect.mp3" type="audio/mpeg">
+        </audio>
     </div>
     <script>
         const canvas = document.getElementById("gameCanvas");
@@ -110,6 +113,12 @@
         }
 
         drawGameOver();
+
+        document.addEventListener("click", function() {
+            var audio = document.getElementById("audioFondo");
+            audio.play().catch(error => console.error("Error al reproducir audio:", error));
+            document.removeEventListener("click", arguments.callee);
+        });
     </script>
 </body>
 
