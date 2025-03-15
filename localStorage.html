@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Records del Juego</title>
+    <style type="text/css">
+        @font-face {
+
+            font-family: 'Titulo';
+            src: url("../Phaser/Moogalator.ttf");
+        }
+
+        body {
+            background-image: url("/assets/Tabla.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            max-height: 100vh;
+            padding: 0;
+        }
+
+        header {
+            font-family: "Bree Serif", serif;
+            font-weight: 700;
+            font-style: normal;
+            font-size: 3.2rem;
+            text-align: center;
+            color: #efff09;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .contenedor {
+            margin-left: 25%;
+            margin-top: 50px;
+            max-width: 1000px;
+            max-height: 800px;
+        }
+
+        h2 {
+            font-family: 'Titulo';
+            font-size: 2.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /*Tabla*/
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+           
+        }
+
+        th,
+        td {
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+
+        thead tr th {
+            padding-right: 30px;
+            background-color: #d1b05e;
+            margin-left: 100px;
+        }
+
+        tbody {
+            font-size: 1rem;
+            background-color: #e8ca7f;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Records del Juego</h2>
+    <div class="contenedor">
+
+
+        <table id="bookTable">
+            <thead>
+                <tr>
+                    <th>Alias</th>
+                    <th>Puntuación</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+    <script src="/JS/localStorage.js"></script>
+</body>
+
+</html>

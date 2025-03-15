@@ -281,6 +281,31 @@ function perderVida(playerX, playerY) {
         gameOver = true;
         player.anims.play('turn');
         this.physics.pause();
+        guardarDatosJuego(alias, score, fechaC);
        // window.location.href = 'Juego2.html';
     }
+    function guardarDatosJuego(alias, score, fecha) {
+        let gameScores = JSON.parse(localStorage.getItem('gameScores')) || [];
+        let aliasExistente = gameScores.find(item => item.alias === alias);
+
+        if (aliasExistente) {//Comparar score
+
+            if (score > aliasExistente.score) {
+                aliasExistente.score = score;
+                aliasExistente.date = fecha;
+            }
+        } else {
+            // El alias no existe, agregar un nuevo registro
+            let gameData = {
+                alias: alias,
+                score: score,
+                date: fecha
+            };
+            gameScores.push(gameData);
+        }
+
+        // Guardar el array actualizado en localStorage
+        localStorage.setItem('gameScores', JSON.stringify(gameScores));
+    }
+
 }
