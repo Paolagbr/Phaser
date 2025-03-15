@@ -26,7 +26,7 @@
             <button class="boton" onclick="location.href='LocalStorage.html'">RECORDS</button>
             <button class="boton" a href="#.html">INSTRUCCIONES</button>
             <button class="boton" onclick="location.href='creditos.html'">CRÉDITOS</button>
-            <button class="boton" a href="#.html">SALIDA</button>
+            <button class="boton" onclick="cerrarVentana()">SALIDA</button>
         </div>
     </div>
     <!--Sonido-->
@@ -40,6 +40,9 @@
             audio.play().catch(error => console.error("Error al reproducir audio:", error));
             document.removeEventListener("click", arguments.callee);
         });
+        function cerrarVentana() {
+        window.close();
+    }
     </script>
 
 
