@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -10,14 +9,13 @@
         body {
             margin: 0;
         }
-
+        
         canvas {
             /*Expansion de pantalla*/
             width: 100vw;
             height: 100vh;
             display: block;
             object-fit: cover;
-
         }
     </style>
 </head>
@@ -211,7 +209,19 @@ function hitBomb (player, bomb)
 }
 
 </script> -->
+
 <body>
+    <audio id="audioFondo" loop>
+        <source src="pantalla1.mp3" type="audio/mpeg">
+    </audio>
+    <!--Sonido de Fondo-->
+    <script>
+        document.addEventListener("click", function() {
+            var audio = document.getElementById("audioFondo");
+            audio.play().catch(error => console.error("Error al reproducir audio:", error));
+            document.removeEventListener("click", arguments.callee);
+        });
+    </script>
     <script src="script.js"></script>
 </body>
 

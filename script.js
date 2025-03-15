@@ -34,7 +34,7 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 var vidas = 3;
-var vidasI = [];//Almacena las imagenes de las vidas
+var vidasI = []; //Almacena las imagenes de las vidas
 const fecha = new Date();
 const dia = fecha.getDate();
 const mes = fecha.getMonth() + 1;
@@ -66,7 +66,7 @@ function preload() {
 function create() {
     // Fondo
     var sky = this.add.image(0, 0, 'sky').setOrigin(0, 0);
-    sky.setScale(2);//Se muestra el fondo de pantalla
+    sky.setScale(2); //Se muestra el fondo de pantalla
 
 
     // Plataformas
@@ -101,11 +101,11 @@ function create() {
         setXY: { x: 60, y: 0, stepX: 90 }
     });
 
-    stars.children.iterate(function (child) {
+    stars.children.iterate(function(child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
-    stars.children.iterate(function (child) {
+    stars.children.iterate(function(child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
@@ -115,8 +115,8 @@ function create() {
     // Datos a pantalla
     Nivel = this.add.text(10, 150, 'NIVEL 1', { fontSize: '32px', fill: '#ffffff', fontWeight: 'bold' });
     scoreText = this.add.text(10, 190, 'score: 0', { fontSize: '32px', fill: '#ffffff' });
-    Nom=this.add.text(10, 230, 'Jugador:'+ alias, { fontSize: '32px', fill: '#ffffff' });
-    Date=this.add.text(10, 265, 'Fecha:'+ fechaC, { fontSize: '32px', fill: '#ffffff' });
+    Nom = this.add.text(10, 230, 'Jugador:' + alias, { fontSize: '32px', fill: '#ffffff' });
+    Date = this.add.text(10, 265, 'Fecha:' + fechaC, { fontSize: '32px', fill: '#ffffff' });
 
     // Colisiones
     this.physics.add.collider(player, platforms);
@@ -146,7 +146,7 @@ function create() {
     this.pauseImage.setScale(1);
 
     // Cada que se da clic se pone pausa
-    this.pauseImage.on('pointerdown', function () {
+    this.pauseImage.on('pointerdown', function() {
         if (scene.physics.world.isPaused) {
             scene.physics.world.resume();
             scene.pauseImage.setScale(1);
@@ -232,7 +232,7 @@ function collectStar(player, star) {
     scoreText.setText('Puntuación: ' + score);
 
     if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
+        stars.children.iterate(function(child) {
             child.enableBody(true, child.x, 0, true, true);
         });
 
@@ -248,7 +248,7 @@ function collectStar(player, star) {
 
 // Función para manejar la colisión con bombas y vidas
 function hitBomb(player, bomb) {
-    var playerX = player.x;//El jugador se mantega en su posicion 
+    var playerX = player.x; //El jugador se mantega en su posicion 
     var playerY = player.y;
 
     player.setTint(0xff0000);
@@ -262,6 +262,7 @@ function hitBomb(player, bomb) {
     bomb.setVelocity(forceX, forceY);
     perderVida.call(this, playerX, playerY);
 }
+
 function perderVida(playerX, playerY) {
     vidas--;
     if (vidas >= 0) {
@@ -283,30 +284,39 @@ function perderVida(playerX, playerY) {
         player.anims.play('turn');
         this.physics.pause();
         guardarDatosJuego(alias, score, fechaC);
-       // window.location.href = 'Juego2.html';
+
+        // Guardar el puntaje y alias en localStorage
+        localStorage.setItem("ultimoScore", score);
+        localStorage.setItem("ultimoAlias", alias);
+
+        // Redirigir a la pantalla de Game Over después de 2 segundos
+        setTimeout(() => {
+            window.location.href = "GameOver.html";
+        }, 1000);
     }
-    function guardarDatosJuego(alias, score, fecha) {
-        let gameScores = JSON.parse(localStorage.getItem('gameScores')) || [];
-        let aliasExistente = gameScores.find(item => item.alias === alias);
+}
 
-        if (aliasExistente) {//Comparar score
+// Función para guardar datos del juego en localStorage
+function guardarDatosJuego(alias, score, fecha) {
+    let gameScores = JSON.parse(localStorage.getItem('gameScores')) || [];
+    let aliasExistente = gameScores.find(item => item.alias === alias);
 
-            if (score > aliasExistente.score) {
-                aliasExistente.score = score;
-                aliasExistente.date = fecha;
-            }
-        } else {
-            // El alias no existe, agregar un nuevo registro
-            let gameData = {
-                alias: alias,
-                score: score,
-                date: fecha
-            };
-            gameScores.push(gameData);
+    if (aliasExistente) {
+        // Comparar puntajes y actualizar si es mayor
+        if (score > aliasExistente.score) {
+            aliasExistente.score = score;
+            aliasExistente.date = fecha;
         }
-
-        // Guardar el array actualizado en localStorage
-        localStorage.setItem('gameScores', JSON.stringify(gameScores));
+    } else {
+        // Si el alias no existe, agregar nuevo registro
+        let gameData = {
+            alias: alias,
+            score: score,
+            date: fecha
+        };
+        gameScores.push(gameData);
     }
 
+    // Guardar el array actualizado en localStorage
+    localStorage.setItem('gameScores', JSON.stringify(gameScores));
 }
