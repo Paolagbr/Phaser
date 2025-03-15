@@ -33,7 +33,7 @@
                 default: 'arcade',
                 arcade: {
                     gravity: { y: 350 },
-                    debug: false
+                    debug: true  //hay que cambiarle a false
                 }
             },
             scene: {
@@ -101,7 +101,7 @@
             this.load.image('sky', 'assets/Nivel2.png');
             this.load.image('ground', 'assets/tronco.png');
             this.load.image('star', 'assets/bill.png');
-            this.load.image('bomb', 'assets/bomb.png');
+            this.load.image('bomb', 'assets/Hector.png');
             this.load.image('vida', 'assets/vida.png');//vidas del jugador
             this.load.image('special', 'assets/libro.png');//Especial
             this.load.image('pause', 'assets/pausa.png');
@@ -156,7 +156,7 @@
             }, this);
 
             //Jugador
-            player = this.physics.add.sprite(100, 450, 'dude');
+            /*player = this.physics.add.sprite(100, 450, 'dude');
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
             player.setVelocityY(0);
@@ -180,7 +180,51 @@
                 frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
                 frameRate: 10,
                 repeat: -1
-            });
+            });*/
+
+            function configurarAnimaciones(scene, personaje) {
+    if (personaje === "drag1") {
+        scene.anims.create({
+            key: 'left',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 2, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        scene.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 8 }],
+            frameRate: 20,
+        });
+
+        scene.anims.create({
+            key: 'right',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 15 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    } else if (personaje === "drag2") {
+        scene.anims.create({
+            key: 'left',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 4, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        scene.anims.create({
+            key: 'turn',
+            frames: [{ key: 'dude', frame: 8 }],
+            frameRate: 20
+        });
+
+        scene.anims.create({
+            key: 'right',
+            frames: scene.anims.generateFrameNumbers('dude', { start: 9, end: 12 }),
+            frameRate: 10,
+            repeat: -1
+        });
+    }
+}
 
             cursors = this.input.keyboard.createCursorKeys();
             bombs = this.physics.add.group();
@@ -289,7 +333,7 @@
             } else if (cursors.right.isDown) {
                 player.setVelocityX(250);
                 player.anims.play('right', true);
-                player.setFlipX(true); 
+                player.setFlipX(false); //Cambiar a true o false
             } else {
                 player.setVelocityX(0);
                 player.anims.play('turn');
@@ -363,6 +407,21 @@
 
             libroAparecido = true; //Cambia la variable a verdadero porque ya aparecio el libro
         }
+
+        if (stars.countActive(true) === 0) {
+        stars.children.iterate(function (child) {
+            child.enableBody(true, child.x, 0, true, true);
+        });
+
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setScale(0.05);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
+    }
+
         function collectSpecialItem(player, specialItem) {
             specialItem.destroy(); // Destruye el libro despues de que lo toca el personaje
             score += 100; // Aumenta la puntuación (puedes ajustar el valor)
