@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WIN</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Importar SweetAlert2 -->
     <style>
         body {
             margin: 0;
@@ -30,33 +32,44 @@
             position: absolute;
         }
         
+        #pantallaPuntajeFinal {
+            position: fixed;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 30px;
+            display: none;
+            font-family: fantasy;
+            /* Oculto al inicio */
+        }
+        
         .button-container {
             position: absolute;
-            bottom: -10px;
-            left: 88%;
+            bottom: 10px;
+            right: 88px;
         }
         
         .boton-imagen {
-            position: absolute;
-            bottom: 15px;
             cursor: pointer;
             background: none;
             border: none;
             outline: none;
             width: 60px;
-            /* Ajusta el tamaño */
             height: auto;
         }
         
         .boton-imagen img {
-            width: 320%;
+            width: 300%;
             height: auto;
             transition: transform 0.2s;
         }
         
         .boton-imagen img:hover {
             transform: scale(1.5);
-            /* Efecto de zoom al pasar el mouse */
         }
     </style>
 </head>
@@ -67,12 +80,26 @@
         Tu navegador no soporta el elemento de video.
     </video>
     <canvas id="gameCanvas"></canvas>
+
+    <!-- Pantalla de Puntaje Final -->
+    <div id="pantallaPuntajeFinal">
+        <h2>🎉 ¡Juego terminado! 🎉</h2>
+        <p>Alias: <span id="aliasFinal"></span></p>
+        <p>Puntaje final: <span id="puntajeFinal"></span></p>
+    </div>
     <div class="button-container">
-        <button class="boton-imagen" onclick="window.location.href='creditos.html'">
-            <img src="/pant/giphy.gif" alt="Volver al Inicio">
+        <button class="boton-imagen" onclick="window.location.href='index.html'">
+            <img src="pant/giphy.gif">
         </button>
     </div>
     <script>
+        let puntajeTotal = 0;
+        let juegoActivo = true; // El juego está activo
+
+        // Recuperar datos anteriores del juego de localStorage
+        let gameData = JSON.parse(localStorage.getItem('gameScores')) || [];
+
+        // Canvas para el efecto de "¡W I N!"
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -83,8 +110,65 @@
         let scale = 1;
         let direction = -0.02;
 
+        // Simulación: Aumenta el puntaje cada 2 segundos
+        let intervalo = setInterval(() => {
+            if (juegoActivo) {
+                puntajeTotal += 10; // Aumentar puntaje
+                console.log(`Puntaje actual: ${puntajeTotal}`);
+            }
+        }, 2000);
+
+        // Función que se ejecuta al terminar el primer nivel
+        function terminarPrimerNivel() {
+            juegoActivo = false;
+            clearInterval(intervalo); // Detener el puntaje
+
+            // Iniciar la animación de "¡W I N!" en el canvas
+            drawGameOver();
+
+            // Usar SweetAlert2 para pedir el alias del jugador
+            Swal.fire({
+                title: "¡Juego terminado!",
+                text: "Ingresa tu alias:",
+                input: "text",
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                showCancelButton: true,
+                confirmButtonText: "Enviar",
+                showLoaderOnConfirm: true,
+                preConfirm: (alias) => {
+                    if (!alias) {
+                        Swal.showValidationMessage('Por favor, ingresa un alias');
+                    } else {
+                        // Guardar puntaje en localStorage
+                        let nuevaEntrada = {
+                            alias: alias,
+                            score: puntajeTotal,
+                            date: new Date().toLocaleDateString('es-ES')
+                        };
+
+                        gameData.push(nuevaEntrada);
+                        localStorage.setItem('gameScores', JSON.stringify(gameData));
+
+                        // Mostrar los datos en la pantalla final después de la animación
+                        setTimeout(() => {
+                            document.getElementById('aliasFinal').textContent = alias;
+                            document.getElementById('puntajeFinal').textContent = puntajeTotal;
+                            document.getElementById('pantallaPuntajeFinal').style.display = "block";
+                        }, 3000); // Mostrar pantalla de puntaje después de 3 segundos de la animación
+
+                        // Actualizar la tabla de puntajes
+                        renderGameData();
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
+
+        // Función para mostrar la animación "¡W I N!" en el canvas
         function drawGameOver() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
 
             ctx.font = `${280 * scale}px fantasy`;
             ctx.textAlign = "center";
@@ -98,6 +182,7 @@
             // Texto principal
             ctx.fillStyle = `rgba(255, 255, 0, ${opacity})`;
             ctx.fillText("¡W I N!", canvas.width / 2, canvas.height / 2 - 140);
+
             opacity += direction;
             scale += direction * 0.1;
 
@@ -105,11 +190,44 @@
                 direction *= -1;
             }
 
-            requestAnimationFrame(drawGameOver);
+            requestAnimationFrame(drawGameOver); // Continuar la animación
         }
 
-        drawGameOver();
+        // Función para actualizar la tabla de puntajes
+        function renderGameData() {
+            const bookTableBody = document.querySelector('#bookTable tbody');
+            if (!bookTableBody) return;
+
+            bookTableBody.innerHTML = ''; // Limpiar tabla
+            gameData.sort((a, b) => b.score - a.score); // Ordenar por puntaje descendente
+
+            // Agregar nuevas entradas de puntajes
+            gameData.forEach(data => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${data.alias}</td>
+            <td>${data.score}</td>
+            <td>${data.date}</td>
+        `;
+                bookTableBody.appendChild(row);
+            });
+        }
+
+        // Cargar la tabla al inicio
+        renderGameData();
+
+        // Simulación: El juego termina después de 10 segundos
+        setTimeout(terminarPrimerNivel, 10000);
+
+        // Evento para activar el audio de fondo
+        document.addEventListener("click", function() {
+            var audio = document.getElementById("audioFondo");
+            audio.play().catch(error => console.error("Error al reproducir audio:", error));
+            document.removeEventListener("click", arguments.callee);
+        });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>
