@@ -26,12 +26,24 @@
             z-index: -1;
         }
         
+        #fecha {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            color: white;
+            font-family: fantasy;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #FF4500;
+        }
+        
         .credits {
             position: absolute;
             bottom: -100%;
             width: 100%;
             text-align: center;
-            font-size: 30px;
+            font-size: 25px;
             color: #FF4500;
             font-family: fantasy;
         }
@@ -69,6 +81,7 @@
         Tu navegador no soporta el elemento de video.
     </video>
 
+    <span id="fecha"></span>
     <div class="credits" id="credits">
 
         <p>Alondra Lizbeth Ibarra Chávez</p>
@@ -79,16 +92,19 @@
         <p>ID:280442</p>
         <p>I N T E G R A N T E S:</p>
         <br>
-        <p><strong>M I N I  P R O Y E C T O</strong> ---- P R I M E R P A R C I A L</p>
+        <p>T e c n o l o g í a s - W e b</p>
+        <p>M A T E R I A:</p>
+        <br>
+        <p><strong>M I N I - P R O Y E C T O</strong> ---- P R I M E R - P A R C I A L</p>
         <br><br>
         <p>viejos tiempos</p>
         <p>serie animada parte de su infancia y recordar </p>
         <p>donde los usuarios podrán explorar aquella </p>
         <p>Ahora se convierte en un videojuego en </p>
         <br><br>
-        <p>cuando eran niños.</p>
-        <p>mellizos durante su visita a unos familiares</p>
-        <p>compartidos por Depper y Mabel hermanos </p>
+        <p>familiares cuando eran niños.</p>
+        <p>Dipper y Mabel, durante su visita a unos</p>
+        <p>compartidos por los hermanos mellizos </p>
         <p>inspirados en los viajes reales de verano </p>
         <p>sobrenaturales de aventura y misterio, </p>
         <p>La serie animada cuenta con elementos</p>
@@ -101,6 +117,19 @@
     </div>
 
     <script>
+        function mostrarFecha() {
+            const fecha = new Date();
+            const opciones = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('fecha').textContent = fecha.toLocaleDateString('es-ES', opciones);
+        }
+
+        mostrarFecha();
+
+
         const video = document.getElementById("gameVideo");
         const credits = document.getElementById("credits");
         let position = window.innerHeight; // Inicia fuera de la pantalla
