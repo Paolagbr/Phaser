@@ -95,7 +95,9 @@
             { x: 1050, y: 300, visible: true },
             { x: 950, y: 450, visible: true },
             { x: 1670, y:500, visible: true },
-            { x: 250, y: 200, visible: true }
+            { x: 250, y: 200, visible: true },
+            { x: 20, y:300, visible: true },
+            { x: 80, y: 600, visible: true }
         ];
 
         var maxPlatforms = staticPlatforms.length;
@@ -262,21 +264,21 @@
                 { x: 1100, y: 650 },
                 { x: 500, y: 480 },
                 { x: 500, y: 680 },
-                { x: 300, y: 500 },
+                { x: 850, y: 500 },
                 { x: 1800, y: 360 },
                 { x: 200, y: 410 },
                 { x: 600, y: 900 },
                 { x: 850, y: 680 },
                 { x: 200, y: 580 },
-                { x: 400, y: 360 },
+                { x: 400, y: 960 },
                 { x: 600, y: 410 },
                 { x: 900, y: 900 },
                 { x: 1300, y: 400 },
-                { x: 1600, y: 250 },
+                { x: 1600, y: 350 },
                 { x: 1800, y: 700 },
                 { x: 1400, y: 500 },
                 { x: 1680, y: 350 },
-                { x: 300, y: 150 },
+                { x: 300, y: 689 },
                 { x:250, y: 780 },
                 { x: 160, y: 600 },
             ];
@@ -340,11 +342,11 @@
             }
 
             if (cursors.left.isDown) {
-                player.setVelocityX(-250);
+                player.setVelocityX(-300);
                 player.anims.play('left', true);
                 //player.setFlipX(true); 
             } else if (cursors.right.isDown) {
-                player.setVelocityX(250);
+                player.setVelocityX(300);
                 player.anims.play('right', true);
                 //player.setFlipX(false); //Cambiar a true o false
             } else {
