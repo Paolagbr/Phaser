@@ -97,7 +97,7 @@ function create() {
     //Estrellas
     stars = this.physics.add.group({
         key: 'star',
-        repeat: 1,
+        repeat: 19,
         setXY: { x: 60, y: 0, stepX: 90 }
     });
 
