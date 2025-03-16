@@ -189,6 +189,19 @@
             <img src="/pant/dip.gif">
         </div>
 
+        <audio id="audioLana" loop>
+            <source src="/pant/LanaLanaLana.mp3" type="audio/mpeg">
+        </audio>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const sound = document.getElementById("audioLana");
+                function playSound() {
+                    sound.play().catch(() => setTimeout(playSound, 500));
+                }
+                playSound();
+            });
+        </script>
 </body>
 
 </html>
