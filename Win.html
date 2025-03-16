@@ -85,7 +85,7 @@
     <div id="pantallaPuntajeFinal">
         <h2>🎉 ¡Juego terminado! 🎉</h2>
         <p>Alias: <span id="aliasFinal"></span></p>
-        <p>Puntaje final: <span id="puntajeFinal"></span></p>
+        <!-- Eliminamos la parte del puntaje -->
     </div>
     <div class="button-container">
         <button class="boton-imagen" onclick="window.location.href='index.html'">
@@ -154,9 +154,9 @@
                         // Mostrar los datos en la pantalla final después de la animación
                         setTimeout(() => {
                             document.getElementById('aliasFinal').textContent = alias;
-                            document.getElementById('puntajeFinal').textContent = puntajeTotal;
+                            // Eliminamos el puntaje
                             document.getElementById('pantallaPuntajeFinal').style.display = "block";
-                        }, 3000); // Mostrar pantalla de puntaje después de 3 segundos de la animación
+                        }, 3000); // Mostrar pantalla después de 3 segundos de la animación
 
                         // Actualizar la tabla de puntajes
                         renderGameData();
