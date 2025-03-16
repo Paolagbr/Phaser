@@ -73,8 +73,8 @@
         var staticPlatforms = [//Coordenadas de los troncos
             { x: 240, y: 1000, visible: true },
             { x: 800, y: 1000, visible: true },
-            { x: 1400, y: 1000, visible: true },
-            { x: 2000, y: 1000, visible: true },
+            { x: 1400, y: 990, visible: true },
+            { x: 2000, y: 800, visible: true },
             { x: 300, y: 700, visible: true },
             { x: 600, y: 500, visible: true },
             { x: 1000, y: 800, visible: true },
@@ -82,17 +82,17 @@
             { x: 1800, y: 600, visible: true },
             { x: 100, y: 900, visible: true },
             { x: 900, y: 200, visible: true },
-            { x: 1600, y: 700, visible: true },
+            { x: 1600, y: 900, visible: true },
             { x: 400, y: 400, visible: true },
             { x: 600, y: 600, visible: true },
-            { x: 500, y: 900, visible: true },
+            { x: 1920, y: 950, visible: true },
             { x: 800, y: 750, visible: true },
-            { x: 1200, y: 350, visible: true },
+            { x: 1200, y: 950, visible: true },
             { x: 1500, y: 500, visible: true },
             { x: 1350, y: 700, visible: true },
             { x: 1100, y: 250, visible: true },
-            { x: 1400, y: 100, visible: true },
-            { x: 1050, y: 300, visible: true },
+            { x: 1750, y: 900, visible: true },
+            { x: 1050, y: 900, visible: true },
             { x: 950, y: 450, visible: true },
             { x: 1670, y:500, visible: true },
             { x: 250, y: 200, visible: true },
@@ -265,7 +265,7 @@
                 { x: 500, y: 480 },
                 { x: 500, y: 680 },
                 { x: 850, y: 500 },
-                { x: 1800, y: 360 },
+                { x: 1800, y: 660 },
                 { x: 200, y: 410 },
                 { x: 600, y: 900 },
                 { x: 850, y: 680 },
@@ -273,14 +273,16 @@
                 { x: 400, y: 960 },
                 { x: 600, y: 410 },
                 { x: 900, y: 900 },
-                { x: 1300, y: 400 },
-                { x: 1600, y: 350 },
+                { x: 1300, y: 500 },
+                { x: 1600, y: 650 },
                 { x: 1800, y: 700 },
                 { x: 1400, y: 500 },
-                { x: 1680, y: 350 },
+                { x: 1680, y: 550 },
                 { x: 300, y: 689 },
                 { x:250, y: 780 },
-                { x: 160, y: 600 },
+                { x: 950, y: 900 },
+                { x: 700, y: 700 }
+              
             ];
             starPositions.forEach(function (pos) {//Acomodo de las estrellas en la posicion indicada
                 var star = stars.create(pos.x, pos.y, 'star');
@@ -300,7 +302,7 @@
             this.physics.add.overlap(player, specialItems, collectSpecialItem, null, this);
 
             // Crreacion de bombas iniciales
-            for (var i = 0; i < 4; i++) {
+            for (var i = 0; i < 3; i++) {
                 var x = Phaser.Math.Between(100, config.width - 100);
                 var bomb = bombs.create(x, 0, 'bomb');
                 bomb.setBounce(1);
@@ -374,7 +376,7 @@
             }
 
             // Desaparecer y reaparecer plataformas aleatorias
-            if (Math.random() < 0.02) {
+            if (Math.random() < 0.01) {
                 togglePlatform.call(this);
             }
         }
@@ -446,7 +448,7 @@
 
         // Función para alternar la visibilidad de las plataformas aleatorias
         function togglePlatform() {
-            var platform = platformGroup[Phaser.Math.Between(2, maxPlatforms - 1)]; // Empieza desde la quinta plataforma
+            var platform = platformGroup[Phaser.Math.Between(5, maxPlatforms - 1)]; // Empieza desde la quinta plataforma
             if (platform.visible) {
                 platform.setVisible(false);
                 platform.body.enable = false;
