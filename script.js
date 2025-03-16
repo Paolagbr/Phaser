@@ -40,10 +40,6 @@ const dia = fecha.getDate();
 const mes = fecha.getMonth() + 1;
 const year = fecha.getFullYear();
 const fechaC = `${dia}/${mes}/${year}`;
-//Objeto Especial
-let specialItemDuration = 20000;//Tiempo del libro en pantalla
-var specialItemText;
-var libroAparecido = false;
 
 //Recuperar el nombre del jugador
 var alias = localStorage.getItem("alias");
@@ -53,7 +49,6 @@ function preload() {
     this.load.image('ground', 'assets/tronco.png');
     this.load.image('star', 'assets/bill.png');
     this.load.image('bomb', 'assets/Hectorgon.png');
-    this.load.image('special', 'assets/libro.png');
     this.load.image('vida', 'assets/vida.png');
     this.load.image('pause', 'assets/pausa.png');
 
@@ -106,11 +101,11 @@ function create() {
         setXY: { x: 60, y: 0, stepX: 90 }
     });
 
-    stars.children.iterate(function (child) {
+    stars.children.iterate(function(child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
-    stars.children.iterate(function (child) {
+    stars.children.iterate(function(child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
@@ -141,15 +136,6 @@ function create() {
         var vidaImagen = this.add.image(30 + (i * 30), 120, 'vida').setScale(1);
         vidasI.push(vidaImagen);
     }
-    // Aparecen los libros que suman puntos al jugador
-    specialItems = this.physics.add.group();
-    this.time.addEvent({
-        delay: 10000, // Cada 10 segundos
-        callback: createSpecialItem,
-        callbackScope: this,
-        loop: true
-    });
-    this.physics.add.overlap(player, specialItems, collectSpecialItem, null, this);
 
     configurarAnimaciones(this, personajeSeleccionado)
     cursors = this.input.keyboard.createCursorKeys();
@@ -160,7 +146,7 @@ function create() {
     this.pauseImage.setScale(1);
 
     // Cada que se da clic se pone pausa
-    this.pauseImage.on('pointerdown', function () {
+    this.pauseImage.on('pointerdown', function() {
         if (scene.physics.world.isPaused) {
             scene.physics.world.resume();
             scene.pauseImage.setScale(1);
@@ -255,7 +241,7 @@ function collectStar(player, star) {
     }
 
     if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
+        stars.children.iterate(function(child) {
             child.enableBody(true, child.x, 0, true, true);
         });
 
@@ -268,56 +254,6 @@ function collectStar(player, star) {
         bomb.allowGravity = false;
     }
 }
-//Funcion del Libro
-function createSpecialItem() {
-    if (libroAparecido) {//Checa si ya aparecio el libro en pantalla
-        return;
-    }
-
-    var x = Phaser.Math.Between(100, config.width - 100);
-    var specialItem = specialItems.create(x, 0, 'special');
-    specialItem.setBounce(1);
-    specialItem.setCollideWorldBounds(true);
-    specialItem.setVelocity(0, 20);
-    specialItem.allowGravity = false;
-
-    var timeLeft = specialItemDuration / 1000;
-    specialItemText = this.add.text(750, 110, 'Tiempo libro: ' + timeLeft, { fontSize: '30px', fill: '#ffffff' });
-
-    var scene = this;
-
-    this.countdown = this.time.addEvent({
-        delay: 1000,
-        callback: function () {
-            timeLeft--;
-            specialItemText.setText('Tiempo libro: ' + timeLeft);
-            if (timeLeft <= 0) {
-                specialItemText.destroy();
-                if (scene.countdown) {
-                    scene.countdown.remove(false);
-                    scene.countdown = null;
-                }
-            }
-        },
-        callbackScope: this,
-        loop: true
-    });
-
-    this.time.delayedCall(specialItemDuration, () => {
-        specialItem.destroy();
-        if (specialItemText) {
-            specialItemText.destroy();
-        }
-    });
-
-    libroAparecido = true; //Cambia la variable a verdadero porque ya aparecio el libro
-}
-function collectSpecialItem(player, specialItem) {
-    specialItem.destroy(); // Destruye el libro despues de que lo toca el personaje
-    score += 100; // Aumenta la puntuación (puedes ajustar el valor)
-    scoreText.setText('Score: ' + score);//Se suman los puntos si el monito lo toca
-}
-
 
 function collectSpecialItem(player, specialItem) {
     specialItem.destroy();
@@ -373,9 +309,9 @@ function perderVida(playerX, playerY) {
         localStorage.setItem("ultimoAlias", alias);
 
         // Redirigir a la pantalla de Game Over después de 2 segundos
-        /*  setTimeout(() => {
-              window.location.href = "GameOver.html";
-          }, 1000);*/
+      /*  setTimeout(() => {
+            window.location.href = "GameOver.html";
+        }, 1000);*/
         window.location.href = 'GameOver.html';
     }
 }
